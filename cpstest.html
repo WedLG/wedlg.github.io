@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<head>
+    <meta chatset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <style>
+        h1
+        {
+            color:black;
+            font-size:xx-large;
+            text-align:center;
+        }
+        #show
+        {
+            color:red;
+            font-size :xx-large;
+            text-align: center;
+        }
+        .button.start:hover
+        {
+            background-color: #b0349a;
+        }
+        .button.start:active{
+            background-color: #b0349a;
+            transform: translateY(2px);
+        }
+        .button.click:hover{
+            background-color: rgb(192, 51, 51);
+            
+        }
+        .button.click:active{
+            background-color: rgb(192, 51, 51);
+            transform:translateY(2px);
+        }
+        .button.reset:hover
+        {
+            background-color: rgb(38, 38, 180);
+        }
+        .button.reset:active
+        {
+            background-color: rgb(38, 38, 180);
+            transform: translateY(2px);
+        }
+        .button.start,.button.click,.button.button.reset
+        {
+            color:white;
+            font-size:16px;
+            border-radius:8px;
+            border:2px solid white;
+            width:200px;
+            height:120px
+        }
+        .button.start
+        {
+            background-color: violet;
+        }
+        .button.click
+        {
+            background-color: red;
+        }
+        .button.reset
+        {
+            background-color: blue;
+        }
+        #buttonList,td
+        {
+            height: 160px;
+        }
+    </style>
+    <title>
+        哼哼哼啊啊啊啊啊啊啊啊啊啊
+    </title>
+</head>
+<body>
+    <div id="main-content" style="color:black;">
+        <h1>
+            这是一个测试用的网站
+        </h1>
+        <p style="align-content: center;text-align: center;">
+            点击下面按钮测测<b>CPS</b>
+        </p>
+        <p style="align-content: center;text-align: center;">
+            点击开始后开始计时,共<b>10秒</b>,按下开始后你共有<b>1秒</b>的时间准备
+        </p>
+    </div>
+    <div id="cnt_counter">
+        <table border="1" align="center" width="30%" cellpadding="10">
+            <tr>
+                <td id="cps_cnt" style="font-size:xx-large" align="center">0</td>
+                <td id="time-cnt" style="font-size: xx-large;color:red" align="center">准备</td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <table  id="buttonList" border = "0" align="center" width="50%">
+            <tr>
+                <td>
+                    <center><button class="button start" onclick = "start()">开始</button></center>
+                </td>
+                <td>
+                    <center><button class= "button click" id="cps_check" onclick="add_click()" >点我点我</button></center>
+                </td>
+                <td>
+                    <center><button class="button reset" onclick="reset()">重置</button></center>
+                </td>
+            </tr>
+
+        </table>
+        
+        
+        <script>
+            let cnt = 0;
+            let total_cnt=0;
+            let timer = 0;
+            let is_st = 0,is_reset=1;
+            let click_num = document.getElementById("cps_cnt");
+            let btn = document.getElementById("cps_check");
+            var per_sec=1.0,interval = 1000,st;
+            var secClass
+            {
+                var max=0,avr;
+            }
+            function add_click()
+            {
+                if(is_st)
+                {
+                    cnt++;
+                    if(timer)total_cnt++;
+                }
+            }
+            function clickPerSec()
+            {
+                click_num.innerText =  cnt/per_sec;
+                if((cnt/per_sec<20)&&(cnt/per_sec>=10))document.getElementById("show").innerText="wocao"
+                else if(cnt/per_sec>=20)document.getElementById("show").innerText="wadashi kami sama!"
+                else document.getElementById("show").innerText = " ";
+                max = cnt/per_sec>max?cnt/per_sec:max;
+            }
+            function start()
+            {
+                if(is_reset&&!is_st)
+                {
+                st = setInterval(function(){
+                    clickPerSec();
+                    cnt=0;
+                    timer++;
+                    document.getElementById("time-cnt").innerText=timer;
+                    clearInterval(this)
+                    if(timer>10)pause();
+                },interval);
+                is_st=1;
+                }
+            }
+            function pause()
+            {
+                clearInterval(st);
+                avr = (total_cnt/timer).toFixed(1);
+                alert("你本次的最佳成绩为:"+max+"\n你本次的平均成绩:"+avr);
+                document.getElementById("bestScore").innerText=max;
+                document.getElementById("average-score").innerText = avr;
+                document.getElementById("time-cnt").innerText="END";
+                click_num.innerText = avr;
+                is_st=0;is_reset=0;total_cnt=0;
+                document.getElementById("show").innerText=" ";
+            }
+            function reset()
+            {
+                if(is_st)pause();
+                click_num.innerText = 0;
+                is_reset = 1;
+                total_cnt=0;
+                timer=0;
+                document.getElementById("time-cnt").innerText="准备";
+            }
+            
+        </script>
+    </div>
+    <div align="center">
+        <p id="show"></p>
+        <table id="scoreShow" >
+            <tr>
+                <td align="left">最佳成绩：</td>
+                <td id="bestScore"></td>
+                <td align="left">平均成绩:</td>
+                <td id="average-score"></td>
+            </tr>
+        </table>
+    </div>
+</body>
