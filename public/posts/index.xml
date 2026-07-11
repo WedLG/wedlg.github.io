@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Posts on WedLG Blog</title>
+        <link>http://localhost:1313/posts/</link>
+        <description>Recent content in Posts on WedLG Blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-CN</language>
+        <lastBuildDate>Sat, 11 Jul 2026 19:18:46 +0800</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" /><item>
+            <title>My_first_blog</title>
+            <link>http://localhost:1313/posts/my_first_blog/</link>
+            <pubDate>Sat, 11 Jul 2026 19:18:46 +0800</pubDate>
+            <guid>http://localhost:1313/posts/my_first_blog/</guid>
+            <description>&lt;p&gt;这篇文章作为发布个人博客的一个测试。&#xA;不知道真有人看吗。。。&lt;/p&gt;&#xA;</description>
+        </item></channel>
+</rss>

@@ -1,0 +1,31 @@
+[en]
+    label  = "English"
+    title  = "WedLG Blog"
+    weight = 1
+
+    [en.params.sidebar]
+        subtitle = "This is a lazy person who has forgotten writing brief info"
+
+[zh]
+    label  = "简体中文"
+    title  = "WedLG的博客"
+    weight = 2
+
+    [zh.params.sidebar]
+        subtitle = "这个人很懒，不想写简介"
+
+[zh-hant-tw]
+    label  = "正體中文"
+    title  = "WedLG Blog"
+    weight = 3
+
+    [zh-hant-tw.params.sidebar]
+        subtitle = "This is a lazy person who has forgotten writing brief info"
+
+[ja]
+    label  = "日本語"
+    title  = "WedLG Blog"
+    weight = 4
+
+    [ja.params.sidebar]
+        subtitle = "This is a lazy person who has forgotten writing brief info"

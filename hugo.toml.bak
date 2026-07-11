@@ -1,0 +1,5 @@
+baseURL = 'https://wedlg.github.io/'
+locale = 'zh-CN'
+title = 'WedLG Blog'
+theme = 'hugo-theme-stack'
+

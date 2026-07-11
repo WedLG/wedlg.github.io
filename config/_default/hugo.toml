@@ -1,0 +1,23 @@
+baseURL                = "https://wedlg.github.io/"
+locale                 = "zh-CN"
+title                  = "WedLG Blog"
+theme                  = "hugo-theme-stack"
+# Theme i18n support
+# See i18n folder for available languages
+defaultContentLanguage = "zh"
+# Set hasCJKLanguage to true if DefaultContentLanguage is a CJK language
+# This will make .Summary and .WordCount behave correctly
+hasCJKLanguage         = true
+
+[[module.imports]]
+    theme = "hugo-theme-stack"
+
+[pagination]
+    pagerSize = 3
+
+[permalinks]
+    post = "/p/:slug/"
+    page = "/:slug/"
+
+[services.disqus]
+    shortname = "hugo-theme-stack"

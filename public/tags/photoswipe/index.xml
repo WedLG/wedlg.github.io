@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Photoswipe on Hugo Theme Stack</title>
+		<link>http://localhost:1313/tags/photoswipe/</link>
+		<description>Recent content in Photoswipe on Hugo Theme Stack</description>
+		<generator>Hugo</generator>
+		<language>zh-CN</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 26 Jan 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/tags/photoswipe/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Image Gallery</title>
+				<link>http://localhost:1313/p/image-gallery/</link>
+				<pubDate>Mon, 26 Jan 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/p/image-gallery/</guid>
+				<description>&lt;p&gt;Stack theme has a built-in support for image galleries. It allows you to create a beautiful gallery by simply placing multiple images side-by-side.&lt;/p&gt;&#xA;&lt;h2 id=&#34;sample-gallery&#34;&gt;Sample Gallery&lt;/h2&gt;&#xA;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/image-gallery/florian-klauer-nptLmg6jqDo-unsplash.jpg&#34; alt=&#34;Photo by Florian Klauer on Unsplash&#34;&gt;  &lt;img src=&#34;http://localhost:1313/p/image-gallery/luca-bravo-alS7ewQ41M8-unsplash.jpg&#34; alt=&#34;Photo by Luca Bravo on Unsplash&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/p/image-gallery/helena-hertz-wWZzXlDpMog-unsplash.jpg&#34; alt=&#34;Photo by Helena Hertz on Unsplash&#34;&gt;  &lt;img src=&#34;http://localhost:1313/p/image-gallery/hudai-gayiran-3Od_VKcDEAA-unsplash.jpg&#34; alt=&#34;Photo by Hudai Gayiran on Unsplash&#34;&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;how-it-works&#34;&gt;How it works&lt;/h2&gt;&#xA;&lt;p&gt;The gallery is powered by &lt;strong&gt;Photoswipe&lt;/strong&gt; and a custom internal script. It automatically calculates the best layout for your images based on their aspect ratios.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>
