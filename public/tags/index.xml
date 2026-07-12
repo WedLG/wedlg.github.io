@@ -5,17 +5,23 @@
         <description>Recent content in Tags on WedLG的博客</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-CN</language>
-        <lastBuildDate>Sat, 11 Jul 2026 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" /><item>
-            <title>Pagination</title>
-            <link>http://localhost:1313/tags/pagination/</link>
+        <lastBuildDate>Sun, 12 Jul 2026 10:24:50 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+            <title>First Try</title>
+            <link>http://localhost:1313/tags/first-try/</link>
             <pubDate>Sat, 11 Jul 2026 00:00:00 +0000</pubDate>
-            <guid>http://localhost:1313/tags/pagination/</guid>
+            <guid>http://localhost:1313/tags/first-try/</guid>
             <description></description>
         </item><item>
             <title>Test</title>
             <link>http://localhost:1313/tags/test/</link>
             <pubDate>Sat, 11 Jul 2026 00:00:00 +0000</pubDate>
             <guid>http://localhost:1313/tags/test/</guid>
+            <description></description>
+        </item><item>
+            <title>Pagination</title>
+            <link>http://localhost:1313/tags/pagination/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+            <guid>http://localhost:1313/tags/pagination/</guid>
             <description></description>
         </item></channel>
 </rss>

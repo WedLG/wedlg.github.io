@@ -21,3 +21,11 @@ hasCJKLanguage         = true
 
 [services.disqus]
     shortname = "hugo-theme-stack"
+
+enableGitInfo = true
+[frontmatter]
+  lastmod = [":git", ":fileModTime"]
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"

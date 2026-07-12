@@ -1,5 +1,5 @@
 ---
-title: "历史文章"
+title: "归档"
 date: 2019-05-28
 layout: "archives"
 slug: "archives"
