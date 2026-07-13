@@ -5,7 +5,19 @@
         <description>Recent content in Tags on WedLG的博客</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-CN</language>
-        <lastBuildDate>Sun, 12 Jul 2026 10:24:50 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 13 Jul 2026 13:05:34 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+            <title>Rust</title>
+            <link>http://localhost:1313/tags/rust/</link>
+            <pubDate>Sun, 12 Jul 2026 00:00:00 +0000</pubDate>
+            <guid>http://localhost:1313/tags/rust/</guid>
+            <description></description>
+        </item><item>
+            <title>Tokio</title>
+            <link>http://localhost:1313/tags/tokio/</link>
+            <pubDate>Sun, 12 Jul 2026 00:00:00 +0000</pubDate>
+            <guid>http://localhost:1313/tags/tokio/</guid>
+            <description></description>
+        </item><item>
             <title>First Try</title>
             <link>http://localhost:1313/tags/first-try/</link>
             <pubDate>Sat, 11 Jul 2026 00:00:00 +0000</pubDate>
@@ -16,12 +28,6 @@
             <link>http://localhost:1313/tags/test/</link>
             <pubDate>Sat, 11 Jul 2026 00:00:00 +0000</pubDate>
             <guid>http://localhost:1313/tags/test/</guid>
-            <description></description>
-        </item><item>
-            <title>Pagination</title>
-            <link>http://localhost:1313/tags/pagination/</link>
-            <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-            <guid>http://localhost:1313/tags/pagination/</guid>
             <description></description>
         </item></channel>
 </rss>

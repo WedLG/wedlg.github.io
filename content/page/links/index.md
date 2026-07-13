@@ -9,6 +9,10 @@ links:
     description: TypeScript 是 JavaScript 的一个超集，它可以编译成纯 JavaScript。
     website: https://www.typescriptlang.org
     image: ts-logo-128.jpg
+  - title: Rust
+    description: Rust 是一个很棒的语言
+    website: https://rust-lang.org/zh-CN/
+    image: https://rust-lang.org/static/images/rust-logo-blk.svg
 menu:
     main: 
         weight: -50
@@ -31,6 +35,10 @@ links:
     description: TypeScript 是 JavaScript 的一个超集，它可以编译成纯 JavaScript。
     website: https://www.typescriptlang.org
     image: ts-logo-128.jpg
+  - title: Rust
+    description: Rust 是一个很棒的语言
+    website: https://rust-lang.org/zh-CN/
+    image: https://rust-lang.org/static/images/rust-logo-blk.svg
 ```
 
 `image` 字段支持本地和外部图像。
