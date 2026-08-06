@@ -13,6 +13,10 @@ links:
     description: Rust 是一个很棒的语言
     website: https://rust-lang.org/zh-CN/
     image: https://rust-lang.org/static/images/rust-logo-blk.svg
+  - title: Rust By Example
+    description: Rust的工具书教程
+    website: https://doc.rust-lang.org/rust-by-example/zh/index.html
+    image: https://rust-lang.org/static/images/rust-logo-blk.svg
 menu:
     main: 
         weight: -50

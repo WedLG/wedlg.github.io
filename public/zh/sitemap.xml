@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2026-07-13T13:05:34+08:00</lastmod>
+    <lastmod>2026-08-06T22:03:43+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -26,16 +26,22 @@
                 />
   </url><url>
     <loc>http://localhost:1313/post/</loc>
-    <lastmod>2026-07-13T13:05:34+08:00</lastmod>
+    <lastmod>2026-08-06T22:03:43+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/rcore/</loc>
+    <lastmod>2026-08-06T22:03:43+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/p/rcore-lab%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86/</loc>
+    <lastmod>2026-08-06T22:03:43+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/rust/</loc>
-    <lastmod>2026-07-13T13:05:34+08:00</lastmod>
+    <lastmod>2026-08-06T22:03:43+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/rust%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2026-07-13T13:05:34+08:00</lastmod>
+    <lastmod>2026-08-06T22:03:43+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2026-07-13T13:05:34+08:00</lastmod>
+    <lastmod>2026-08-06T22:03:43+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -57,17 +63,26 @@
                 href="http://localhost:1313/ja/tags/"
                 />
   </url><url>
+    <loc>http://localhost:1313/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2026-08-06T22:03:43+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2026-08-06T22:03:43+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/p/rcore-lab%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/</loc>
+    <lastmod>2026-08-06T21:34:56+08:00</lastmod>
+  </url><url>
     <loc>http://localhost:1313/tags/tokio/</loc>
-    <lastmod>2026-07-13T13:05:34+08:00</lastmod>
+    <lastmod>2026-07-13T14:57:14+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/p/%E5%85%B3%E4%BA%8Emini-redis%E7%9A%84%E8%8B%A5%E5%B9%B2%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2026-07-13T13:05:34+08:00</lastmod>
+    <lastmod>2026-07-13T14:57:14+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/first-try/</loc>
     <lastmod>2026-07-13T00:24:55+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/page/</loc>
-    <lastmod>2026-07-12T11:29:37+08:00</lastmod>
+    <lastmod>2026-08-06T21:45:37+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/test/</loc>
     <lastmod>2026-07-13T00:24:55+08:00</lastmod>
@@ -105,12 +120,12 @@
     <lastmod>2026-07-12T01:32:19+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/%E5%85%B3%E4%BA%8E/</loc>
-    <lastmod>2026-07-12T10:28:17+08:00</lastmod>
+    <lastmod>2026-08-06T21:45:37+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/archives/</loc>
     <lastmod>2026-07-12T01:34:58+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/%E9%93%BE%E6%8E%A5/</loc>
-    <lastmod>2026-07-12T11:29:37+08:00</lastmod>
+    <lastmod>2026-08-06T21:40:28+08:00</lastmod>
   </url>
 </urlset>

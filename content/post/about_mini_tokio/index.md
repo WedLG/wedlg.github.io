@@ -10,7 +10,10 @@ categories:
 image: https://rust-lang.org/static/images/rust-logo-blk.svg
 ---
 
-## 0.前言
+## 前言
+
+Mini Redis教程通过一个教学用的阉割版Redis，以此让
+读者熟悉有关tokio以及异步相关的功能及其运作方式。
 
 有关Mini Redis的相关教程网址如下：
 
@@ -30,9 +33,9 @@ bytes = "1"
 futures = "0.3"
 ```
 
-## 1. 深入异步章节（Async in depth）
+## 深入异步章节（Async in depth）
 
-### 1.1 总述
+### 总述
 
 该章节为理解tokio中有关任务的相关机制的运作方式，实现了一个迷你版的tokio，称为**Mini-Tokio**。
 
@@ -87,10 +90,15 @@ impl Future for Delay{
 }
 ```
 
+本质上，Future的运作是由一套**状态机**来控制的。
+实现了Future Trait的结构体在编译后会生成对应的状态机。
+而托管状态运行的Mini Tokio则需要通过轮询来监控任务执行状态，
+因而Delay的轮询（Poll）方法需要返回不同阶段该任务对应的状态。
+
 上述Delay的实现实际存在一些问题，由于不影响所以先暂时忽略。
 该Delay在每次触发任务的时候都会设置一个定时器线程来模拟任务的准备过程。
 
-### 1.2 Mini Tokio
+### Mini Tokio
 
 本教程使用Mini Tokio代替具体的tokio库来托管任务的执行。
 该Mini Tokio仅实现了tokio的部分功能且不完全。
@@ -135,7 +143,7 @@ struct TaskFuture {
 Task结构体中，task_future字段代表需要执行的任务，而
 executor字段为具体的执行字段。
 
-为了处理任务，需要对上述结构体定义一系列的方法。相关方法如下所示。
+为了处理任务，需要对上述结构体定义一系列的方法，以此来监控相关future的状态并作出处理。相关方法如下所示。
 
 ```rust
 
@@ -247,7 +255,7 @@ async fn main(){
 
 1. 由MiniTokio.spawn方法创建了一个任务。该方法中调用了Task::spawn来创建了一个任务。Task::spawn函数会通过MiniTokio传入的sender实例，将新建的任务发送至消息队列。发送的信息中包含任务的具体内容，以及唤醒时需要的执行器。
 2. main函数中调用了MiniTokio.run方法，标志着任务正式开始执行。此时内部会对接收者部分进行循环检查。若MiniTokio实例接收到了一个任务，run方法将对该任务的状态进行轮询（Poll）。
-3. 对该任务进行轮询的过程中，需要事先检查此任务上一次的轮询状态（对应TaskFuture中的poll字段）。一个已经处于Poll::Ready（即已完成）的任务是无法进行轮询的。若该任务上一次轮询时仍在执行中（检查后会返回Poll::Pending），则更新任务的poll字段。
+3. 对该任务进行轮询的过程中，需要事先检查此任务上一次的轮询状态（对应TaskFuture中的poll字段）。**一个已经处于Poll::Ready（即已完成）的任务是无法进行轮询的**。若该任务上一次轮询时仍在执行中（检查后会返回Poll::Pending），则更新任务的poll字段。
 4. 在MiniTokio实例对任务轮询的同时，该任务也在异步执行中。此处任务实现为上述的Delay。Delay结束后，会通过上下文（cx）获取到的waker主动唤醒，提示MiniTokio该任务已完成。
 5. 由于Task实现了ArcWake特征，当Delay任务调用了waker.wake()方法时，同时也会调用wake_by_ref方法，此时该任务会通过保存的执行器发送任务相关信息表示已完成。
 6. MiniTokio实例接收到了完成消息，重新对任务进行轮询。此时发现任务已完成，故停止轮询。任务结束。
@@ -272,14 +280,14 @@ H -->|Poll::Ready| L
 
 以上即为Mini Tokio的运作流程。若有不足后续会继续补充。
 
-### 1.3 关于Delay的缺陷
+### 关于Delay的缺陷
 
 对于上述Delay的实现，仍然存在一些问题。
 
 由于当前Delay的poll方法为每次poll创建一个新线程，因而，
 如果代码中存在对Delay::poll的多次调用（即对Delay的多次轮询），将会导致性能下降。
 
-此外，poll方法使用的唤醒器waker不一定每次都能和当前Delay所处的任务上下文相关联。
+此外，poll方法使用的唤醒器waker**不一定**每次都能和当前Delay所处的任务上下文相关联。
 这是由于Rust支持异步跨任务执行，故而在每次poll的时候必须要获取到当前上下文的waker，否则会造成无效唤醒。
 
 因此，当前Delay实现需要做出改进，需要在上下文变化时记录当前waker。

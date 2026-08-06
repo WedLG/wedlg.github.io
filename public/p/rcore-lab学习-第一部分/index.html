@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="前言 作为本系列的第一部分，仅仅只是起了个标题而已。 本人目前在通过rCore Lab复习相关的操作系统知识。 如果有写的不好的地方烦请指出，谢谢！。\n💡 有关rCore Lab: ">
+<title>rCore Lab学习 第一部分</title>
+
+
+<link rel="canonical" href="http://localhost:1313/p/rcore-lab%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css"><meta property='og:title' content="rCore Lab学习 第一部分">
+<meta property='og:description' content="前言 作为本系列的第一部分，仅仅只是起了个标题而已。 本人目前在通过rCore Lab复习相关的操作系统知识。 如果有写的不好的地方烦请指出，谢谢！。\n💡 有关rCore Lab: ">
+<meta property='og:url' content='http://localhost:1313/p/rcore-lab%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/'>
+<meta property='og:site_name' content='WedLG的博客'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='rust' /><meta property='article:tag' content='操作系统' /><meta property='article:tag' content='rCore' /><meta property='article:published_time' content='2026-07-13T17:59:03&#43;08:00'/><meta property='article:modified_time' content='2026-08-06T22:23:51&#43;08:00'/><meta property='og:image' content='https://fastly.picsum.photos/id/909/800/600.jpg?hmac=SLDLx3caBYdIJn5H2T1Nam80p67h0GmxStWh4i2rpkU' />
+<meta name="twitter:title" content="rCore Lab学习 第一部分">
+<meta name="twitter:description" content="前言 作为本系列的第一部分，仅仅只是起了个标题而已。 本人目前在通过rCore Lab复习相关的操作系统知识。 如果有写的不好的地方烦请指出，谢谢！。\n💡 有关rCore Lab: "><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://fastly.picsum.photos/id/909/800/600.jpg?hmac=SLDLx3caBYdIJn5H2T1Nam80p67h0GmxStWh4i2rpkU' />
+    <link rel="shortcut icon" href="/img/avatar.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/img/avatar.png" 
+                        width="2536"
+                        height="1902"
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+                    <span class="emoji">✏️</span>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">WedLG的博客</a></h1>
+            <h2 class="site-description">这个人很懒，不想写简介</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/WedLG'
+                        
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E9%93%BE%E6%8E%A5/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>链接</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    <li id="i18n-switch">  
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                        <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                            
+                                
+                                
+                                    
+                                
+                                <option value="/en/" >English</option>
+                            
+                                
+                                
+                                    
+                                        
+                                    
+                                
+                                <option value="/p/rcore-lab%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/" selected>简体中文</option>
+                            
+                                
+                                
+                                    
+                                
+                                <option value="/zh-hant-tw/" >正體中文</option>
+                            
+                                
+                                
+                                    
+                                
+                                <option value="/ja/" >日本語</option>
+                            
+                        </select>
+                    </li>
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ol>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#操作系统概述">操作系统概述</a>
+      <ol>
+        <li><a href="#总述">总述</a></li>
+        <li><a href="#发展历程">发展历程</a></li>
+      </ol>
+    </li>
+    <li><a href="#系统调用接口">系统调用接口</a></li>
+    <li><a href="#操作系统的抽象">操作系统的抽象</a></li>
+    <li><a href="#操作系统的特征">操作系统的特征</a></li>
+    <li><a href="#第0章课后练习">第0章课后练习</a>
+      <ol>
+        <li><a href="#编程题">编程题</a></li>
+        <li><a href="#问答题">问答题</a></li>
+      </ol>
+    </li>
+  </ol>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+    <div class="article-image">
+        <a href="/p/rcore-lab%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/">
+            <img alt="Featured image of post rCore Lab学习 第一部分" height="600" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="https://fastly.picsum.photos/id/909/800/600.jpg?hmac=SLDLx3caBYdIJn5H2T1Nam80p67h0GmxStWh4i2rpkU" width="800">
+        </a>
+    </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/rust%E5%AD%A6%E4%B9%A0/" style="background-color: hsl(346, 60%, 84%); color: hsl(346, 60%, 15%);">
+                Rust学习
+            </a>
+        
+            
+            
+            
+            <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="background-color: hsl(156, 60%, 84%); color: hsl(156, 60%, 15%);">
+                操作系统
+            </a>
+        
+            
+            
+            
+            <a href="/categories/rcore/" style="background-color: hsl(86, 60%, 84%); color: hsl(86, 60%, 15%);">
+                RCore
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/rcore-lab%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/">rCore Lab学习 第一部分</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-07-13T17:59:03&#43;08:00'>2026年7月13日星期一</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        阅读时长: 1 分钟
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>目录</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ol>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#操作系统概述">操作系统概述</a>
+      <ol>
+        <li><a href="#总述">总述</a></li>
+        <li><a href="#发展历程">发展历程</a></li>
+      </ol>
+    </li>
+    <li><a href="#系统调用接口">系统调用接口</a></li>
+    <li><a href="#操作系统的抽象">操作系统的抽象</a></li>
+    <li><a href="#操作系统的特征">操作系统的特征</a></li>
+    <li><a href="#第0章课后练习">第0章课后练习</a>
+      <ol>
+        <li><a href="#编程题">编程题</a></li>
+        <li><a href="#问答题">问答题</a></li>
+      </ol>
+    </li>
+  </ol>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h2 id="前言">前言
+</h2><p>作为本系列的第一部分，仅仅只是起了个标题而已。
+本人目前在通过rCore Lab复习相关的操作系统知识。
+如果有写的不好的地方烦请指出，谢谢！。</p>
+<blockquote class="alert alert-tip">
+        <div class="alert-header">
+            <span class="alert-icon">💡</span>
+            <span class="alert-title">有关rCore Lab: <a class="link" href="https://rcore-os.cn/rCore-Tutorial-Book-v3/index.html"  target="_blank" rel="noopener"</span>
+        </div>
+        <div class="alert-body">
+            <p>    >rCore教程 - v3</a></p>
+        </div>
+    </blockquote>
+<h2 id="操作系统概述">操作系统概述
+</h2><h3 id="总述">总述
+</h3><p>简而言之，操作系统（Operating System，OS）是一种系统软件。
+操作系统向下负责管理计算机的硬件资源，如磁盘、内存、I/O接口、外设等；
+向上为应用程序提供运行所需的环境和资源，如进程管理、内存分配、存储系统等。</p>
+<p>一般而言，操作系统主要包括<strong>操作系统内核</strong>、<strong>系统工具和软件库</strong>以及<strong>用户接口</strong>三个部分。
+其中，操作系统内核是操作系统的核心，负责管理硬件，以及向上为用户提供相关的服务。
+现代的操作系统内核一般负责处理如下事务：</p>
+<ul>
+<li>进程/线程管理：包括进程、线程的创建、管理、销毁、调度等。</li>
+<li>内存管理：包括内存的分配、释放，以及不同进程间的内存隔离等。</li>
+<li>文件管理：包括文件的定义、存储、操作（创建、访问、修改、执行、销毁及赋予进程这些操作的权限等），以及管理和查看这些文件的文件系统。</li>
+<li>设备驱动：负责管理接入机器的所有外设（如鼠标、键盘）及外设和本机器之间的所有交互（如输入/输出），并提供接口供应用程序及内核程序进行访问。</li>
+<li>同步互斥：负责处理不同进程/线程等对同一共享资源的访问。其中，同步负责处理进程/线程之间的协作问题，互斥负责处理对共享资源的竞争问题。</li>
+<li>系统调用：内核向上提供一组ABI（Application Binary Interface,应用程序二进制接口），使得应用程序得以操纵一部分底层硬件和内核机制，如文件管理、设备管理、进程管理等。</li>
+<li>网络接口：允许操作系统访问网络并对网络进行一系列的操作。</li>
+</ul>
+<h3 id="发展历程">发展历程
+</h3><p>操作系统经历了一系列发展历程。总的来说如下：</p>
+<ol>
+<li>“监控程序”。这被认为是操作系统的雏形。自计算机被发明后一段时间，由设备操作员负责管理程序运行的整个流程，包括程序的输入、输出、运行环境的准备等一系列繁琐之事，使得CPU的运行效率十分低下。因而，人们开发了监控程序负责代替操作员完成一系列程序运行的准备工作，提高了CPU的运行效率。</li>
+<li><strong>批处理系统</strong>。随着计算机的发展，陆续出现了针对某一计算机开发的操作系统，然而这些操作系统大多使用汇编语言编写，导致开发效率不高；此外，由于当时处理器资源紧张，让CPU仅局限于一个用户的程序运行会导致资源浪费（例如，一个用户程序的加载会导致无法运行其他用户程序，这会使CPU处于一段时间的空闲状态），因而出现了批处理系统。<strong>批处理系统</strong>一般指把一系列作业（Job）以脱机形式（指不依赖于计算机的方式）输入到磁带上，使其能够按顺序进行处理。这类操作系统在运行作业时会将CPU的使用权交给任务，并在作业执行完后继续执行下一个作业。该类操作系统尽可能地让CPU连续地处理任务，大大提高了CPU的利用率。<br>
+根据单次可处理的作业数不同，批处理系统可以分为<strong>单道批处理系统</strong>和<strong>多道批处理系统</strong>。前者一次仅能处理一份作业，无法完全利用所有的CPU资源，效率较低。因而后面出现了<strong>多道批处理</strong>技术。多道批处理系统可以将多个程序放入内存，并让多个程序交替使用CPU及其他软、硬件资源，极大提高了任务的处理速度和资源的利用率。<br>
+此外，为了确保程序之间互不干扰，还出现了内存隔离机制，从硬件上对各个程序能够访问的地址空间进行隔离，从而保障程序独立的运行环境。</li>
+<li><strong>分时操作系统</strong>。上述批处理系统仍然存在人机交互型差、调试不方便等问题。随着硬件部分越来越发达，计算机的计算能力也在逐步提升，开发者不必过多关注于提升处理器的利用率，而是更多关注于人机交互。因而分时操作系统应运而生。分时操作系统将程序的运行时间切割为若干固定大小的<strong>时间片</strong>，每个位于调度队列中的进程分时运行固定的时间片，一旦超过时间片立刻调度回队列，换为下一个进程，直至所有进程运行完毕。通过切割时间片的做法，不同用户可以在同一时间段内同时操纵一台机器，从而实现了多用户共享的功能。</li>
+<li>现代操作系统。随着计算机软硬件技术的发展，越来越多功能性强、应用广泛的操作系统被开发出来，其中一些逐渐成为了当今世界的主流。例如广泛用于个人PC的Windows操作系统、应用于服务器、嵌入式系统等的Linux操作系统、应用于手机等移动端的Android、iOS等。</li>
+</ol>
+<p>综上所述，操作系统经历了从简单到复杂、从单道处理到多道执行、从特定平台到跨平台等一系列的变化发展，极大地推动计算机技术的产生。</p>
+<h2 id="系统调用接口">系统调用接口
+</h2><p>为了支持不同语言调用内核功能的需求，操作系统内核为用户提供了<strong>系统调用接口</strong>，这些系统调用接口通过<strong>ABI的规范</strong>来约定用户态和内核态的交互方式（如寄存器、堆栈、数据类型等）。高级程序语言通过标准库等的方式将其封装成更易于调用的API（Application Programming Interface，应用编程接口），使得用户能够更加轻易地调用内核功能。</p>
+<h2 id="操作系统的抽象">操作系统的抽象
+</h2><p>操作系统为运行在其上的应用软件提供了执行环境。<strong>执行环境</strong>一般指为应用程序的正确运行所提供的服务和管理环境，以及为维护和管理这种环境所进行的一系列处理操作。一切应用程序都需要在这样的执行环境中运行，它规定了程序运行时的边界，以及可以操纵的资源、可以使用的功能。执行环境的内涵随着操作系统的发展日趋变化。在一些情况下，程序的执行环境会发生切换。</p>
+<p>对于操作系统，其程序运行可以抽象为<strong>控制流</strong>，即一系列连续的操作序列。控制流主要有<strong>普通控制流</strong>和<strong>异常控制流</strong>。
+普通控制流为程序正常运行时的控制流，一般而言程序不会切换到其他执行环境中。
+一旦发生外部事件，或者程序内部在执行的时候产生了某个事件，导致程序被迫切换到其他执行环境中执行任务，则这一部分控制流称之为异常控制流。
+这类事件通常有外部输入、程序内部错误、调试指令等。这些跳转和切换由操作系统透明处理，程序本身对此没有任何感知。</p>
+<p>在进行切换和跳转时，操作系统需要维护切换和跳转前后的上下文环境（例如程序运行时的栈、通用寄存器等），以便后续程序能够顺利恢复正常运行。</p>
+<p>这类异常控制流大体上可以分为三种：</p>
+<ol>
+<li><strong>中断</strong>。一般指外部设备中断，如时钟中断、I/O中断。这类异常控制流由外设异步发出信号，操作系统在中断周期内对中断请求进行轮询检查，发现请求后即触发中断，而后操作系统会跳转到对应的中断处理程序（ISR）处理中断请求。待请求处理完毕后，操作系统会跳转回<strong>下一条指令</strong>的位置继续执行。每次中断前都需要保存上下文，退出中断处理程序后需要恢复上下文。</li>
+<li><strong>陷阱</strong>。这类异常控制流一般由人为设置的自陷指令触发，一般用于进行某些系统调用。触发该控制流后，操作系统会跳转到对应的内核系统调用函数执行。同样需要保存和恢复上下文。</li>
+<li><strong>异常</strong>。有时被称为“内中断”。这是由程序内部运行时发生的错误产生的一类控制流。有些可以恢复，例如缺页异常（故障），操作系统会跳到对应的处理程序进行回复，处理结束后再跳转回<strong>原先执行的指令</strong>继续运行。有些不可恢复，例如除0异常，此时操作系统会直接终止程序的运行。</li>
+</ol>
+<p>操作系统使用<strong>进程</strong>来抽象程序运行的实例。通过进程的概念，操作系统可以轻易地将不同程序进行隔离，使其拥有“独立”的资源、上下文、运行时等。然而，在内存中实际上存在着许多进程在交替运行，操作系统只是为其营造了一种独立的幻觉，操作系统需要维护各个进程的相关信息来保证各程序互不干扰地有序正常运行，并确保处理器利用率最大化。</p>
+<p>操作系统使用<strong>地址空间</strong>来抽象底层物理存储系统。操作系统尽可能地为每个应用程序提供一段连续的、尽可能大的、私有的存储空间（虚拟存储），这需要操作系统对底层内存和外存进行统一的管理和分配。</p>
+<p>操作系统使用<strong>文件</strong>来抽象存储在该计算机上的各类数据。一些外设同样也可以被抽象为文件，从而隐藏自身复杂细节来支持被访问。操作系统通过一套文件系统对所存储的数据进行管理，并为用户和应用程序提供了访问和操纵这些文件的功能接口。</p>
+<h2 id="操作系统的特征">操作系统的特征
+</h2><p>操作系统主要有以下五个特征：</p>
+<ol>
+<li><strong>虚拟性</strong>。操作系统对内存和CPU等资源进行虚拟化。内存虚拟化即为虚拟内存部分，CPU虚拟化主要指利用时间片等手段，让内存中的多个程序能够分时共享CPU，且每一个程序在给定时间片内可以独占CPU，这样的并发化处理让每一个程序都有自己“独占”CPU的错觉。</li>
+<li><strong>并发性</strong>。同一时间段内操作系统中可能有多个程序在同步运行。</li>
+<li><strong>异步性</strong>。操作系统内部的信息交流和执行，以及操作系统和外部世界的信息交流并非总是步调一致，信息的发出和接收都是异步的，执行的过程也是都有自己的步调。</li>
+<li><strong>共享性</strong>。操作系统内部各个程序可能存在共享同一块资源的情况，此时需要操作系统的同步和互斥机制对共享资源进行调度。</li>
+<li><strong>持久性</strong>。用户对该操作系统以及数据所做的任何更改，都会持久性地保存在本机的存储系统中，并藉由文件系统展示给用户。</li>
+</ol>
+<h2 id="第0章课后练习">第0章课后练习
+</h2><h3 id="编程题">编程题
+</h3><p>待补充。</p>
+<h3 id="问答题">问答题
+</h3><p>待补充。</p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/rust/">Rust</a>
+        
+            <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+        
+            <a href="/tags/rcore/">RCore</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright inline-meta">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under <a class="link" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"  target="_blank" rel="noopener"
+    >CC BY-NC-SA 4.0</a></span>
+    </section>
+    <section class="article-lastmod inline-meta">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            最后更新于 2026年8月6日星期四
+        </span>
+    </section></footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">相关文章</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/rcore-lab%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86/">
+        
+        <div class="article-image">
+            <img alt="Featured image of post rCore Lab学习 第二部分" height="150" loading="lazy" src="/818-800x600_1598696307713877649_hu_98c426f55411a977.jpg" srcset="/818-800x600_1598696307713877649_hu_98c426f55411a977.jpg 1x, /818-800x600_1598696307713877649_hu_b3325286a2e8b133.jpg 2x" width="250">
+
+        </div>
+        
+
+        <div class="article-details"style="background: linear-gradient(0deg, #a8b1ad80 0%, #678f9bC0 100%);">
+            <h2 class="article-title">rCore Lab学习 第二部分</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="has-image">
+    <a href="/p/%E5%85%B3%E4%BA%8Emini-redis%E7%9A%84%E8%8B%A5%E5%B9%B2%E5%AD%A6%E4%B9%A0/">
+        
+        <div class="article-image">
+            <img alt="Featured image of post 关于mini-redis的若干学习" loading="lazy" src="https://rust-lang.org/static/images/rust-logo-blk.svg">
+
+        </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">关于mini-redis的若干学习</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <script
+    src="https://giscus.app/client.js"
+    data-repo="WedLG/wedlg.github.io"
+    data-repo-id="R_kgDOKgbUqg"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOKgbUqs4DCyVr"
+    data-mapping="pathname"
+    data-strict="false"
+    data-reactions-enabled="true"
+    data-emit-metadata="false"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="zh-CN"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async
+></script>
+<script>
+    function setGiscusTheme(theme) {
+        let giscus = document.querySelector("iframe.giscus-frame");
+        if (giscus) {
+            giscus.contentWindow.postMessage(
+                {
+                    giscus: {
+                        setConfig: {
+                            theme: theme,
+                        },
+                    },
+                },
+                "https://giscus.app"
+            );
+        }
+    }
+
+    (function () {
+        addEventListener("message", (e) => {
+            if (event.origin !== "https://giscus.app") return;
+            handler();
+        });
+        window.addEventListener("onColorSchemeChange", handler);
+
+        function handler() {
+            if (document.documentElement.dataset.scheme === "light") {
+                setGiscusTheme('light');
+            } else {
+                setGiscusTheme('dark_dimmed');
+            }
+        }
+    })();
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 WedLG的博客
+    </section>
+    
+    <section class="powerby">
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.0cd3a73539d798eff53b23ca5158229a5bca02525090bbefd81a8c9b176f7a8b.js" defer></script>
+
+
+    </body>
+</html>

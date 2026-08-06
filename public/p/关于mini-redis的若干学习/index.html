@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN" dir="ltr">
     <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="0.前言 有关Mini Redis的相关教程网址如下：\n中文：Mini Redis Tokio Tutorial 中文版\n英文：Mini Redis Tokio Tutorial\n由于目前看了有一段时间，仅将现阶段开始有所不大理解的地方记录下来。如果后续会去回顾这个教程，会把前面的地方再补上。\n">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="前言 Mini Redis教程通过一个教学用的阉割版Redis，以此让 读者熟悉有关tokio以及异步相关的功能及其运作方式。\n有关Mini Redis的相关教程网址如下：\n">
 <title>关于mini-redis的若干学习</title>
 
 
@@ -13,12 +13,12 @@
 
 
 <link rel="stylesheet" href="/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css"><meta property='og:title' content="关于mini-redis的若干学习">
-<meta property='og:description' content="0.前言 有关Mini Redis的相关教程网址如下：\n中文：Mini Redis Tokio Tutorial 中文版\n英文：Mini Redis Tokio Tutorial\n由于目前看了有一段时间，仅将现阶段开始有所不大理解的地方记录下来。如果后续会去回顾这个教程，会把前面的地方再补上。\n">
+<meta property='og:description' content="前言 Mini Redis教程通过一个教学用的阉割版Redis，以此让 读者熟悉有关tokio以及异步相关的功能及其运作方式。\n有关Mini Redis的相关教程网址如下：\n">
 <meta property='og:url' content='http://localhost:1313/p/%E5%85%B3%E4%BA%8Emini-redis%E7%9A%84%E8%8B%A5%E5%B9%B2%E5%AD%A6%E4%B9%A0/'>
 <meta property='og:site_name' content='WedLG的博客'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='rust' /><meta property='article:tag' content='tokio' /><meta property='article:published_time' content='2026-07-12T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-13T13:35:01&#43;08:00'/><meta property='og:image' content='https://rust-lang.org/static/images/rust-logo-blk.svg' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='rust' /><meta property='article:tag' content='tokio' /><meta property='article:published_time' content='2026-07-12T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-13T14:57:14&#43;08:00'/><meta property='og:image' content='https://rust-lang.org/static/images/rust-logo-blk.svg' />
 <meta name="twitter:title" content="关于mini-redis的若干学习">
-<meta name="twitter:description" content="0.前言 有关Mini Redis的相关教程网址如下：\n中文：Mini Redis Tokio Tutorial 中文版\n英文：Mini Redis Tokio Tutorial\n由于目前看了有一段时间，仅将现阶段开始有所不大理解的地方记录下来。如果后续会去回顾这个教程，会把前面的地方再补上。\n"><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:description" content="前言 Mini Redis教程通过一个教学用的阉割版Redis，以此让 读者熟悉有关tokio以及异步相关的功能及其运作方式。\n有关Mini Redis的相关教程网址如下：\n"><meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content='https://rust-lang.org/static/images/rust-logo-blk.svg' />
     <link rel="shortcut icon" href="/img/avatar.png" />
 
@@ -302,12 +302,12 @@
             <nav class="toc-nav" id="TableOfContents">
                 
   <ol>
-    <li><a href="#0前言">0.前言</a></li>
-    <li><a href="#1-深入异步章节async-in-depth">1. 深入异步章节（Async in depth）</a>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#深入异步章节async-in-depth">深入异步章节（Async in depth）</a>
       <ol>
-        <li><a href="#11-总述">1.1 总述</a></li>
-        <li><a href="#12-mini-tokio">1.2 Mini Tokio</a></li>
-        <li><a href="#13-关于delay的缺陷">1.3 关于Delay的缺陷</a></li>
+        <li><a href="#总述">总述</a></li>
+        <li><a href="#mini-tokio">Mini Tokio</a></li>
+        <li><a href="#关于delay的缺陷">关于Delay的缺陷</a></li>
       </ol>
     </li>
   </ol>
@@ -413,12 +413,12 @@
             <nav class="toc-nav">
                 
   <ol>
-    <li><a href="#0前言">0.前言</a></li>
-    <li><a href="#1-深入异步章节async-in-depth">1. 深入异步章节（Async in depth）</a>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#深入异步章节async-in-depth">深入异步章节（Async in depth）</a>
       <ol>
-        <li><a href="#11-总述">1.1 总述</a></li>
-        <li><a href="#12-mini-tokio">1.2 Mini Tokio</a></li>
-        <li><a href="#13-关于delay的缺陷">1.3 关于Delay的缺陷</a></li>
+        <li><a href="#总述">总述</a></li>
+        <li><a href="#mini-tokio">Mini Tokio</a></li>
+        <li><a href="#关于delay的缺陷">关于Delay的缺陷</a></li>
       </ol>
     </li>
   </ol>
@@ -431,8 +431,10 @@
     <section class="article-content">
     
     
-    <h2 id="0前言">0.前言
-</h2><p>有关Mini Redis的相关教程网址如下：</p>
+    <h2 id="前言">前言
+</h2><p>Mini Redis教程通过一个教学用的阉割版Redis，以此让
+读者熟悉有关tokio以及异步相关的功能及其运作方式。</p>
+<p>有关Mini Redis的相关教程网址如下：</p>
 <p>中文：<a class="link" href="https://cakeal.github.io/mini-redis-tokio-tutorial-zh/Intro.html"  target="_blank" rel="noopener"
     >Mini Redis Tokio Tutorial 中文版</a></p>
 <p>英文：<a class="link" href="https://tokio.rs/tokio/tutorial"  target="_blank" rel="noopener"
@@ -455,8 +457,8 @@
 </span></span><span class="line"><span class="cl"><span class="nx">futures</span> <span class="p">=</span> <span class="s2">&#34;0.3&#34;</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="1-深入异步章节async-in-depth">1. 深入异步章节（Async in depth）
-</h2><h3 id="11-总述">1.1 总述
+</div><h2 id="深入异步章节async-in-depth">深入异步章节（Async in depth）
+</h2><h3 id="总述">总述
 </h3><p>该章节为理解tokio中有关任务的相关机制的运作方式，实现了一个迷你版的tokio，称为<strong>Mini-Tokio</strong>。</p>
 <p>在Rust中，异步函数或async块返回一个<strong>实现了Future特征</strong>的结构体。该Future不会立刻执行，直至其使用了.await方法。示例：</p>
 <div class="highlight"><div class="chroma">
@@ -554,9 +556,13 @@
 </span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><p>上述Delay的实现实际存在一些问题，由于不影响所以先暂时忽略。
+</div><p>本质上，Future的运作是由一套<strong>状态机</strong>来控制的。
+实现了Future Trait的结构体在编译后会生成对应的状态机。
+而托管状态运行的Mini Tokio则需要通过轮询来监控任务执行状态，
+因而Delay的轮询（Poll）方法需要返回不同阶段该任务对应的状态。</p>
+<p>上述Delay的实现实际存在一些问题，由于不影响所以先暂时忽略。
 该Delay在每次触发任务的时候都会设置一个定时器线程来模拟任务的准备过程。</p>
-<h3 id="12-mini-tokio">1.2 Mini Tokio
+<h3 id="mini-tokio">Mini Tokio
 </h3><p>本教程使用Mini Tokio代替具体的tokio库来托管任务的执行。
 该Mini Tokio仅实现了tokio的部分功能且不完全。
 具体的Mini Tokio的定义如下所示：</p>
@@ -632,7 +638,7 @@
 具体任务由Task结构体进行封装。
 Task结构体中，task_future字段代表需要执行的任务，而
 executor字段为具体的执行字段。</p>
-<p>为了处理任务，需要对上述结构体定义一系列的方法。相关方法如下所示。</p>
+<p>为了处理任务，需要对上述结构体定义一系列的方法，以此来监控相关future的状态并作出处理。相关方法如下所示。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -839,7 +845,7 @@ executor字段为具体的执行字段。</p>
 <ol>
 <li>由MiniTokio.spawn方法创建了一个任务。该方法中调用了Task::spawn来创建了一个任务。Task::spawn函数会通过MiniTokio传入的sender实例，将新建的任务发送至消息队列。发送的信息中包含任务的具体内容，以及唤醒时需要的执行器。</li>
 <li>main函数中调用了MiniTokio.run方法，标志着任务正式开始执行。此时内部会对接收者部分进行循环检查。若MiniTokio实例接收到了一个任务，run方法将对该任务的状态进行轮询（Poll）。</li>
-<li>对该任务进行轮询的过程中，需要事先检查此任务上一次的轮询状态（对应TaskFuture中的poll字段）。一个已经处于Poll::Ready（即已完成）的任务是无法进行轮询的。若该任务上一次轮询时仍在执行中（检查后会返回Poll::Pending），则更新任务的poll字段。</li>
+<li>对该任务进行轮询的过程中，需要事先检查此任务上一次的轮询状态（对应TaskFuture中的poll字段）。<strong>一个已经处于Poll::Ready（即已完成）的任务是无法进行轮询的</strong>。若该任务上一次轮询时仍在执行中（检查后会返回Poll::Pending），则更新任务的poll字段。</li>
 <li>在MiniTokio实例对任务轮询的同时，该任务也在异步执行中。此处任务实现为上述的Delay。Delay结束后，会通过上下文（cx）获取到的waker主动唤醒，提示MiniTokio该任务已完成。</li>
 <li>由于Task实现了ArcWake特征，当Delay任务调用了waker.wake()方法时，同时也会调用wake_by_ref方法，此时该任务会通过保存的执行器发送任务相关信息表示已完成。</li>
 <li>MiniTokio实例接收到了完成消息，重新对任务进行轮询。此时发现任务已完成，故停止轮询。任务结束。</li>
@@ -858,11 +864,11 @@ I --> J[Delay 返回 Poll::Ready]
 J --> K[更新状态,重新检查]
 K --> L[无需轮询,任务结束]
 H -->|Poll::Ready| L</pre><p>以上即为Mini Tokio的运作流程。若有不足后续会继续补充。</p>
-<h3 id="13-关于delay的缺陷">1.3 关于Delay的缺陷
+<h3 id="关于delay的缺陷">关于Delay的缺陷
 </h3><p>对于上述Delay的实现，仍然存在一些问题。</p>
 <p>由于当前Delay的poll方法为每次poll创建一个新线程，因而，
 如果代码中存在对Delay::poll的多次调用（即对Delay的多次轮询），将会导致性能下降。</p>
-<p>此外，poll方法使用的唤醒器waker不一定每次都能和当前Delay所处的任务上下文相关联。
+<p>此外，poll方法使用的唤醒器waker<strong>不一定</strong>每次都能和当前Delay所处的任务上下文相关联。
 这是由于Rust支持异步跨任务执行，故而在每次poll的时候必须要获取到当前上下文的waker，否则会造成无效唤醒。</p>
 <p>因此，当前Delay实现需要做出改进，需要在上下文变化时记录当前waker。</p>
 <div class="highlight"><div class="chroma">
@@ -1032,42 +1038,101 @@ H -->|Poll::Ready| L</pre><p>以上即为Mini Tokio的运作流程。若有不�
 
     
 
+<aside>
+    <h2 class="section-title">相关文章</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/rcore-lab%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86/">
+        
+        <div class="article-image">
+            <img alt="Featured image of post rCore Lab学习 第二部分" height="150" loading="lazy" src="/818-800x600_1598696307713877649_hu_98c426f55411a977.jpg" srcset="/818-800x600_1598696307713877649_hu_98c426f55411a977.jpg 1x, /818-800x600_1598696307713877649_hu_b3325286a2e8b133.jpg 2x" width="250">
+
+        </div>
+        
+
+        <div class="article-details"style="background: linear-gradient(0deg, #a8b1ad80 0%, #678f9bC0 100%);">
+            <h2 class="article-title">rCore Lab学习 第二部分</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="has-image">
+    <a href="/p/rcore-lab%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/">
+        
+        <div class="article-image">
+            <img alt="Featured image of post rCore Lab学习 第一部分" height="150" loading="lazy" src="/909-800x600_11019772669087666845_hu_42aa34ea314f4d8.jpg" srcset="/909-800x600_11019772669087666845_hu_42aa34ea314f4d8.jpg 1x, /909-800x600_11019772669087666845_hu_ebdfb6f90cbb9f33.jpg 2x" width="250">
+
+        </div>
+        
+
+        <div class="article-details"style="background: linear-gradient(0deg, #1e5fa580 0%, #bddbf7C0 100%);">
+            <h2 class="article-title">rCore Lab学习 第一部分</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
      
     
         
 
-        <div id="gitalk-container"></div>
-<link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css"
-/>
-<script src="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.18.0/js/md5.min.js"></script>
+        <script
+    src="https://giscus.app/client.js"
+    data-repo="WedLG/wedlg.github.io"
+    data-repo-id="R_kgDOKgbUqg"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOKgbUqs4DCyVr"
+    data-mapping="pathname"
+    data-strict="false"
+    data-reactions-enabled="true"
+    data-emit-metadata="false"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="zh-CN"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async
+></script>
 <script>
-    const gitalk = new Gitalk({
-        clientID: "",
-        clientSecret: "",
-        repo: "",
-        owner: "",
-        admin: [""],
-        distractionFreeMode: false, 
-        id: md5(location.pathname), 
-        proxy:"",
-    });
-    (function () {
-        const excludedHosts = ["localhost", "127.0.0.1"];
-        const hostname = window.location.hostname;
-
-        if (excludedHosts.includes(hostname)) {
-            document.getElementById("gitalk-container").innerHTML =
-                "Gitalk comments not available by default when the website is previewed locally.";
-            return;
+    function setGiscusTheme(theme) {
+        let giscus = document.querySelector("iframe.giscus-frame");
+        if (giscus) {
+            giscus.contentWindow.postMessage(
+                {
+                    giscus: {
+                        setConfig: {
+                            theme: theme,
+                        },
+                    },
+                },
+                "https://giscus.app"
+            );
         }
-        gitalk.render("gitalk-container");
+    }
+
+    (function () {
+        addEventListener("message", (e) => {
+            if (event.origin !== "https://giscus.app") return;
+            handler();
+        });
+        window.addEventListener("onColorSchemeChange", handler);
+
+        function handler() {
+            if (document.documentElement.dataset.scheme === "light") {
+                setGiscusTheme('light');
+            } else {
+                setGiscusTheme('dark_dimmed');
+            }
+        }
     })();
 </script>
-
-
 
     
 

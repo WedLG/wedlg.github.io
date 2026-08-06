@@ -1,10 +1,10 @@
 ---
 title: {{ replace .Name "-" " " | title }}
-draft: false
+draft: true
 date: {{ .Date }}
 tags:
   - 
 categories:
   - 
-image: 
+image: "https://picsum.photos/800/600?random={{ now.Unix }}"
 ---
