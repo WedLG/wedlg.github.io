@@ -11,6 +11,9 @@ favicon        = "img/avatar.png"
     avatar   = "img/avatar.png"
 
 [article]
+    math = true
+    toc = true
+    readingTime = true
     [article.license]
         enabled = true
         default = "Licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)"
