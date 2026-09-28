@@ -16,7 +16,7 @@
 <meta property='og:description' content="前言 本人开始补充分布式方面的知识。此处仅做笔记。 相关课程见这里。\n此为本系列的第一部分，即MapReduce的学习笔记。\nMapReduce介绍 MapReduce是一种编程模型，由Google公司设计1，用于解决集群（Cluster）计算机中大规模数据处理和计算问题。 MapReduce的论文见这里。\n">
 <meta property='og:url' content='http://localhost:1313/p/mit6.5840-part1-mapreduce/'>
 <meta property='og:site_name' content='WedLG的博客'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='分布式' /><meta property='article:tag' content='MapReduce' /><meta property='article:published_time' content='2026-08-24T21:16:16&#43;08:00'/><meta property='article:modified_time' content='2026-08-27T19:56:47&#43;08:00'/><meta property='og:image' content='https://picsum.photos/800/600?random=1787577376' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='分布式' /><meta property='article:tag' content='MapReduce' /><meta property='article:published_time' content='2026-08-24T21:16:16&#43;08:00'/><meta property='article:modified_time' content='2026-09-05T19:47:44&#43;08:00'/><meta property='og:image' content='https://picsum.photos/800/600?random=1787577376' />
 <meta name="twitter:title" content="Mit6.5840 Part1 —— MapReduce">
 <meta name="twitter:description" content="前言 本人开始补充分布式方面的知识。此处仅做笔记。 相关课程见这里。\n此为本系列的第一部分，即MapReduce的学习笔记。\nMapReduce介绍 MapReduce是一种编程模型，由Google公司设计1，用于解决集群（Cluster）计算机中大规模数据处理和计算问题。 MapReduce的论文见这里。\n"><meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content='https://picsum.photos/800/600?random=1787577376' />
@@ -318,6 +318,11 @@
       </ol>
     </li>
     <li><a href="#优化手段">优化手段</a></li>
+    <li><a href="#有关lab1">有关Lab1</a>
+      <ol>
+        <li><a href="#worker的通信">Worker的通信</a></li>
+      </ol>
+    </li>
   </ol>
 
             </nav>
@@ -401,7 +406,7 @@
 
 
                     <time class="article-time--reading">
-                        阅读时长: 8 分钟
+                        阅读时长: 9 分钟
                     </time>
                 
             </div>
@@ -444,6 +449,11 @@
       </ol>
     </li>
     <li><a href="#优化手段">优化手段</a></li>
+    <li><a href="#有关lab1">有关Lab1</a>
+      <ol>
+        <li><a href="#worker的通信">Worker的通信</a></li>
+      </ol>
+    </li>
   </ol>
 
             </nav>
@@ -530,22 +540,33 @@ MapReduce的执行过程如下：</p>
 当Map或Reduce采用非确定性函数时，其仍然有一个较弱且合理的语义。</p>
 <p>在使用非确定性函数的情况下，对于单个Reduce任务，其输出结果等同于其顺序执行情况下的结果。
 但是对于多个Reduce任务而言，其结果未必相同，即其输出结果可能等价于MapReduce<strong>不同批次</strong>的顺序执行结果。</p>
-
-    <blockquote>
-        <p>例如，假设存在Map任务$M$和Reduce任务$R_1$和$R_2$，其中$M$因故障重试或推测执行而被执行了多次，
+<blockquote class="alert alert-note">
+        <div class="alert-header">
+            <span class="alert-icon">📝</span>
+            <span class="alert-title">备注</span>
+        </div>
+        <div class="alert-body">
+            <p>例如，假设存在Map任务$M$和Reduce任务$R_1$和$R_2$，其中$M$因故障重试或推测执行而被执行了多次，
 $R_1$读取的可能是$M$第一次重启的输出，而$R_2$读取的是$M$第二次重启的输出。
 这就导致了$R_1$和$R_2$的输出有所不同</p>
-
+        </div>
     </blockquote>
 <p>因此，对于非确定性函数的情况，MapReduce的输出可能是<strong>多个运行快照拼凑出的结果</strong>。</p>
 <h2 id="优化手段">优化手段
 </h2><p>MapReduce可以采取一些优化手段以得到更好地执行结果。例如：</p>
 <ul>
-<li>针对特定问题使用特定的分区函数（例如Map的输出键为URL时，希望能够整合来自同一主机源的URL），能够提高分区带来的效果。</li>
-<li>分区后的排序固定为升序或降序。</li>
-<li>将当前执行的任务粒度尽可能切细，从而加快单个机器的运行效率，以此提升整体效率。</li>
-<li>在进行Reduce之前（一般在执行Map任务后，Map结果信息被分派到网络上之前），在Map Worker端使用一个<strong>Combiner函数</strong>将大量相同、相关的键整合为一个，以减少传播到网络上的数据量，从而节省网络开销、提高运行效率。例如词频统计中会产生大量诸如<code>(&quot;the&quot;,1)</code>的键值对，Combiner函数会将其整合为<code>(&quot;the&quot;, N)</code>，其中$N$为单词&quot;the&quot;的出现次数。</li>
+<li>特殊的分区函数：针对特定问题使用特定的分区函数（例如Map的输出键为URL时，希望能够整合来自同一主机源的URL），能够提高分区带来的效果。</li>
+<li>固定的排序顺序：分区后的排序固定为升序或降序。</li>
+<li>细粒度任务：将当前执行的任务粒度尽可能切细，从而加快单个机器的运行效率，以此提升整体效率。</li>
+<li>Combiner函数：在进行Reduce之前（一般在执行Map任务后，Map结果信息被分派到网络上之前），在Map Worker端使用一个<strong>Combiner函数</strong>将大量相同、相关的键整合为一个，以减少传播到网络上的数据量，从而节省网络开销、提高运行效率。例如词频统计中会产生大量诸如<code>(&quot;the&quot;,1)</code>的键值对，Combiner函数会将其整合为<code>(&quot;the&quot;, N)</code>，其中$N$为单词&quot;the&quot;的出现次数。</li>
 </ul>
+<h2 id="有关lab1">有关Lab1
+</h2><p>Lab1的具体内容在<a class="link" href="https://pdos.csail.mit.edu/6.824/labs/lab-mr.html"  target="_blank" rel="noopener"
+    >这里</a>。
+Lab1要求我们实现一个单机版的MapReduce系统（文中使用了Coordinator代替原论文中的Master），
+用于统计给定文章的词频。对于本Lab，设计如下。</p>
+<h3 id="worker的通信">Worker的通信
+</h3><p>在程序开始运行的时候，由Worker负责使用RPC向Coordinator进行Ping活动以获取任务。</p>
 <div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
@@ -593,7 +614,7 @@ $R_1$读取的可能是$M$第一次重启的输出，而$R_2$读取的是$M$第�
 
 
         <span>
-            最后更新于 2026年8月27日星期四
+            最后更新于 2026年9月5日星期六
         </span>
     </section></footer>
 

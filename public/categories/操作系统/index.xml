@@ -5,7 +5,13 @@
         <description>Recent content in 操作系统 on WedLG的博客</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-CN</language>
-        <lastBuildDate>Thu, 06 Aug 2026 23:50:06 +0800</lastBuildDate><atom:link href="http://localhost:1313/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 22 Sep 2026 11:22:51 +0800</lastBuildDate><atom:link href="http://localhost:1313/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/index.xml" rel="self" type="application/rss+xml" /><item>
+            <title>虚拟化读书笔记</title>
+            <link>http://localhost:1313/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</link>
+            <pubDate>Tue, 22 Sep 2026 10:47:12 +0800</pubDate>
+            <guid>http://localhost:1313/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</guid>
+            <description>&lt;img src=&#34;https://picsum.photos/800/600?random=1790045232&#34; alt=&#34;Featured image of post 虚拟化读书笔记&#34; /&gt;&lt;h2 id=&#34;前言&#34;&gt;前言&#xA;&lt;/h2&gt;&lt;p&gt;今天开始补充虚拟化相关的知识，&#xA;所读的书籍名为《系统虚拟化：原理与实现》。&lt;/p&gt;&#xA;&lt;h2 id=&#34;虚拟化的基本概念&#34;&gt;虚拟化的基本概念&#xA;&lt;/h2&gt;&lt;p&gt;虚拟化本质是一种对&lt;strong&gt;计算机资源的抽象&lt;/strong&gt;。&#xA;其通过抽象位于下层的计算机运行环境，为运行其上的软件提供一系列虚拟的接口和资源。&lt;/p&gt;&#xA;&lt;p&gt;在虚拟化中，物理资源一般被冠名为&lt;strong&gt;宿主（Host）&lt;/strong&gt;，而虚拟出来的资源一般被冠名为&lt;strong&gt;客户（Guest）&lt;/strong&gt;。&#xA;例如，若将物理计算机虚拟化为一到多个虚拟计算机，则该物理计算机称为&lt;strong&gt;宿主机&lt;/strong&gt;，而运行其上的虚拟计算机称为&lt;strong&gt;客户机&lt;/strong&gt;。&#xA;类似的概念还有&lt;strong&gt;宿主机操作系统&lt;/strong&gt;（运行在宿主机的操作系统）和&lt;strong&gt;虚拟机操作系统&lt;/strong&gt;（运行在虚拟机上的操作系统）。&lt;/p&gt;&#xA;&lt;h2 id=&#34;不同层次的虚拟化&#34;&gt;不同层次的虚拟化&#xA;&lt;/h2&gt;&lt;p&gt;根据虚拟化的层次不同，可以大致分为以下几类：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;硬件抽象层上的虚拟化。通过虚拟硬件抽象层来实现虚拟机。这类虚拟化的特点有:&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;运行开销小。由于客户机和宿主机的指令集几乎相同，因此大部分指令可以直接在宿主机上运行，仅部分指令需要由虚拟机处理。&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;底层抽象的差异化。宿主机&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;ol start=&#34;2&#34;&gt;&#xA;&lt;li&gt;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;</description>
+        </item><item>
             <title>rCore Lab学习 第二部分</title>
             <link>http://localhost:1313/p/rcore-lab%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86/</link>
             <pubDate>Thu, 06 Aug 2026 21:32:08 +0800</pubDate>

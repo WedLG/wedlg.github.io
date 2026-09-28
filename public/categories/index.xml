@@ -5,7 +5,19 @@
         <description>Recent content in Categories on WedLG的博客</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-CN</language>
-        <lastBuildDate>Thu, 27 Aug 2026 17:49:30 +0800</lastBuildDate><atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 22 Sep 2026 11:22:51 +0800</lastBuildDate><atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+            <title>操作系统</title>
+            <link>http://localhost:1313/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</link>
+            <pubDate>Tue, 22 Sep 2026 10:47:12 +0800</pubDate>
+            <guid>http://localhost:1313/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</guid>
+            <description></description>
+        </item><item>
+            <title>虚拟化</title>
+            <link>http://localhost:1313/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</link>
+            <pubDate>Tue, 22 Sep 2026 10:47:12 +0800</pubDate>
+            <guid>http://localhost:1313/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/</guid>
+            <description></description>
+        </item><item>
             <title>Mit 6.5840</title>
             <link>http://localhost:1313/categories/mit-6.5840/</link>
             <pubDate>Mon, 24 Aug 2026 21:16:16 +0800</pubDate>
@@ -30,10 +42,16 @@
             <guid>http://localhost:1313/categories/rust%E5%AD%A6%E4%B9%A0/</guid>
             <description></description>
         </item><item>
-            <title>操作系统</title>
-            <link>http://localhost:1313/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</link>
-            <pubDate>Thu, 06 Aug 2026 21:32:08 +0800</pubDate>
-            <guid>http://localhost:1313/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/</guid>
+            <title>AI</title>
+            <link>http://localhost:1313/categories/ai/</link>
+            <pubDate>Thu, 16 Jul 2026 10:48:48 +0800</pubDate>
+            <guid>http://localhost:1313/categories/ai/</guid>
+            <description></description>
+        </item><item>
+            <title>深度学习</title>
+            <link>http://localhost:1313/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</link>
+            <pubDate>Thu, 16 Jul 2026 10:48:48 +0800</pubDate>
+            <guid>http://localhost:1313/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</guid>
             <description></description>
         </item><item>
             <title>Test</title>

@@ -114,6 +114,7 @@ MapReduce使用了**原子提交**的方式来保证上述过程的正确性。�
 在使用非确定性函数的情况下，对于单个Reduce任务，其输出结果等同于其顺序执行情况下的结果。
 但是对于多个Reduce任务而言，其结果未必相同，即其输出结果可能等价于MapReduce**不同批次**的顺序执行结果。
 
+> [!NOTE]
 > 例如，假设存在Map任务$M$和Reduce任务$R_1$和$R_2$，其中$M$因故障重试或推测执行而被执行了多次，
 > $R_1$读取的可能是$M$第一次重启的输出，而$R_2$读取的是$M$第二次重启的输出。
 > 这就导致了$R_1$和$R_2$的输出有所不同
@@ -128,5 +129,15 @@ MapReduce可以采取一些优化手段以得到更好地执行结果。例如�
 - 固定的排序顺序：分区后的排序固定为升序或降序。
 - 细粒度任务：将当前执行的任务粒度尽可能切细，从而加快单个机器的运行效率，以此提升整体效率。
 - Combiner函数：在进行Reduce之前（一般在执行Map任务后，Map结果信息被分派到网络上之前），在Map Worker端使用一个**Combiner函数**将大量相同、相关的键整合为一个，以减少传播到网络上的数据量，从而节省网络开销、提高运行效率。例如词频统计中会产生大量诸如`("the",1)`的键值对，Combiner函数会将其整合为`("the", N)`，其中$N$为单词"the"的出现次数。
+
+## 有关Lab1
+
+Lab1的具体内容在[这里](https://pdos.csail.mit.edu/6.824/labs/lab-mr.html)。
+Lab1要求我们实现一个单机版的MapReduce系统（文中使用了Coordinator代替原论文中的Master），
+用于统计给定文章的词频。对于本Lab，设计如下。
+
+### Worker的通信
+
+在程序开始运行的时候，由Worker负责使用RPC向Coordinator进行Ping活动以获取任务。
 
 [^1]: Jeffrey Dean and Sanjay Ghemawat. 2008. MapReduce: simplified data processing on large clusters. Commun. ACM 51, 1 (January 2008), 107–113. [链接](https://doi.org/10.1145/1327452.1327492)
