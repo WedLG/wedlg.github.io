@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="前言 这是《系统虚拟化：原理与实现》第三章的读书笔记。 （第二章内容有一大部分接触过，所以如果要补等后面再补）\n第三章主要是对虚拟化相关技术和架构的一个概述。\n">
+<title>虚拟化读书笔记 第三章</title>
+
+
+<link rel="canonical" href="http://localhost:1313/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.3fad9cc72df364278f0bc81e83f0bf63ce3a95d75bb7c9a0d6ab5115e2b70dc0.css"><meta property='og:title' content="虚拟化读书笔记 第三章">
+<meta property='og:description' content="前言 这是《系统虚拟化：原理与实现》第三章的读书笔记。 （第二章内容有一大部分接触过，所以如果要补等后面再补）\n第三章主要是对虚拟化相关技术和架构的一个概述。\n">
+<meta property='og:url' content='http://localhost:1313/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/'>
+<meta property='og:site_name' content='WedLG的博客'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='操作系统' /><meta property='article:tag' content='虚拟化' /><meta property='article:tag' content='读书笔记' /><meta property='article:published_time' content='2026-09-28T11:01:50&#43;08:00'/><meta property='article:modified_time' content='2026-09-30T16:12:32&#43;08:00'/><meta property='og:image' content='https://picsum.photos/800/600?random=1790564510' />
+<meta name="twitter:title" content="虚拟化读书笔记 第三章">
+<meta name="twitter:description" content="前言 这是《系统虚拟化：原理与实现》第三章的读书笔记。 （第二章内容有一大部分接触过，所以如果要补等后面再补）\n第三章主要是对虚拟化相关技术和架构的一个概述。\n"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://picsum.photos/800/600?random=1790564510' />
+    <link rel="shortcut icon" href="/img/avatar.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/img/avatar.png" 
+                        width="2536"
+                        height="1902"
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+                    <span class="emoji">🌋</span>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">WedLG的博客</a></h1>
+            <h2 class="site-description">这个人很懒，不想写简介</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/WedLG'
+                        
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E9%93%BE%E6%8E%A5/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>链接</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    <li id="i18n-switch">  
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                        <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                            
+                                
+                                
+                                    
+                                
+                                <option value="/en/" >English</option>
+                            
+                                
+                                
+                                    
+                                        
+                                    
+                                
+                                <option value="/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/" selected>简体中文</option>
+                            
+                                
+                                
+                                    
+                                
+                                <option value="/zh-hant-tw/" >正體中文</option>
+                            
+                                
+                                
+                                    
+                                
+                                <option value="/ja/" >日本語</option>
+                            
+                        </select>
+                    </li>
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ol>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#可虚拟化架构和不可虚拟化架构">可虚拟化架构和不可虚拟化架构</a></li>
+    <li><a href="#处理器虚拟化">处理器虚拟化</a>
+      <ol>
+        <li><a href="#虚拟处理器及其相关">虚拟处理器及其相关</a></li>
+        <li><a href="#中断和异常的注入">中断和异常的注入</a></li>
+        <li><a href="#对称多处理器smp技术的模拟">对称多处理器（SMP）技术的模拟</a></li>
+      </ol>
+    </li>
+    <li><a href="#内存虚拟化">内存虚拟化</a></li>
+    <li><a href="#io虚拟化">I/O虚拟化</a>
+      <ol>
+        <li><a href="#设备发现">设备发现</a></li>
+        <li><a href="#访问截获">访问截获</a></li>
+        <li><a href="#设备模拟">设备模拟</a></li>
+        <li><a href="#设备复用">设备复用</a></li>
+      </ol>
+    </li>
+    <li><a href="#vmm的功能和组成">VMM的功能和组成</a>
+      <ol>
+        <li><a href="#虚拟资源的管理">虚拟资源的管理</a></li>
+        <li><a href="#物理资源的管理">物理资源的管理</a></li>
+        <li><a href="#其他模块">其他模块</a></li>
+      </ol>
+    </li>
+    <li><a href="#vmm的分类">VMM的分类</a>
+      <ol>
+        <li><a href="#按虚拟平台分类">按虚拟平台分类</a></li>
+        <li><a href="#按实现结构分类">按实现结构分类</a></li>
+      </ol>
+    </li>
+    <li><a href="#典型虚拟化产品">典型虚拟化产品</a></li>
+  </ol>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+    <div class="article-image">
+        <a href="/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/">
+            <img alt="Featured image of post 虚拟化读书笔记 第三章" height="600" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="https://picsum.photos/800/600?random=1790564510" width="800">
+        </a>
+    </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="background-color: hsl(156, 60%, 84%); color: hsl(156, 60%, 15%);">
+                操作系统
+            </a>
+        
+            
+            
+            
+            <a href="/categories/%E8%99%9A%E6%8B%9F%E5%8C%96/" style="background-color: hsl(233, 60%, 84%); color: hsl(233, 60%, 15%);">
+                虚拟化
+            </a>
+        
+            
+            
+            
+            <a href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" style="background-color: hsl(93, 60%, 84%); color: hsl(93, 60%, 15%);">
+                读书笔记
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/">虚拟化读书笔记 第三章</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-09-28T11:01:50&#43;08:00'>2026年9月28日星期一</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        阅读时长: 15 分钟
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>目录</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ol>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#可虚拟化架构和不可虚拟化架构">可虚拟化架构和不可虚拟化架构</a></li>
+    <li><a href="#处理器虚拟化">处理器虚拟化</a>
+      <ol>
+        <li><a href="#虚拟处理器及其相关">虚拟处理器及其相关</a></li>
+        <li><a href="#中断和异常的注入">中断和异常的注入</a></li>
+        <li><a href="#对称多处理器smp技术的模拟">对称多处理器（SMP）技术的模拟</a></li>
+      </ol>
+    </li>
+    <li><a href="#内存虚拟化">内存虚拟化</a></li>
+    <li><a href="#io虚拟化">I/O虚拟化</a>
+      <ol>
+        <li><a href="#设备发现">设备发现</a></li>
+        <li><a href="#访问截获">访问截获</a></li>
+        <li><a href="#设备模拟">设备模拟</a></li>
+        <li><a href="#设备复用">设备复用</a></li>
+      </ol>
+    </li>
+    <li><a href="#vmm的功能和组成">VMM的功能和组成</a>
+      <ol>
+        <li><a href="#虚拟资源的管理">虚拟资源的管理</a></li>
+        <li><a href="#物理资源的管理">物理资源的管理</a></li>
+        <li><a href="#其他模块">其他模块</a></li>
+      </ol>
+    </li>
+    <li><a href="#vmm的分类">VMM的分类</a>
+      <ol>
+        <li><a href="#按虚拟平台分类">按虚拟平台分类</a></li>
+        <li><a href="#按实现结构分类">按实现结构分类</a></li>
+      </ol>
+    </li>
+    <li><a href="#典型虚拟化产品">典型虚拟化产品</a></li>
+  </ol>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h2 id="前言">前言
+</h2><p>这是《系统虚拟化：原理与实现》第三章的读书笔记。
+（第二章内容有一大部分接触过，所以如果要补等后面再补）</p>
+<p>第三章主要是对虚拟化相关技术和架构的一个概述。</p>
+<h2 id="可虚拟化架构和不可虚拟化架构">可虚拟化架构和不可虚拟化架构
+</h2><p>虚拟化实际上做的工作是<em>欺骗</em>运行于VMM之上的客户机操作系统，让其认为它们在真实物理硬件上运行。
+VMM对物理资源的虚拟化需要完成三个主要任务，即<strong>处理器虚拟化</strong>、<strong>内存虚拟化</strong>和<strong>I/O虚拟化</strong>。
+所有的虚拟机需要满足<em>同质、高效、资源受控</em>的特征，若不具备这三个特征的任意一种则该虚拟机设计不良。</p>
+<p>在虚拟机执行过程中，有一类指令被称为<strong>敏感指令</strong>，即一类会<strong>操纵敏感资源的指令</strong>。
+显然，所有的特权指令都是敏感指令，但有一些敏感指令<em>并不是特权指令</em>。
+客户机OS发出的所有敏感指令都需要在VMM的监控下执行，或者由VMM进行虚拟化实现。</p>
+
+    <blockquote>
+        <p>e.g. 读取一些敏感寄存器如CR3（PTBR，x86的页表基址寄存器）、GDTR的指令，或者读取虚拟机相关配置的指令都是敏感指令。
+这些指令会将客户机OS运行在虚拟硬件上的事实暴露给客户机OS，使得虚拟机不再安全。</p>
+
+    </blockquote>
+<p>若所有的敏感指令都是特权指令，VMM可以通过<strong>陷入再模拟</strong>的方式进行捕获并虚拟化，
+即让VMM运行在最高特权级上，而客户机OS运行在次一级的特权级上。
+当客户机OS执行敏感指令时，OS会因为敏感指令触发异常从而陷入到VMM，而后由VMM模拟该指令。</p>
+<p>若存在敏感指令不是特权指令，则说明该结构存在<strong>虚拟化漏洞</strong>，VMM无法对相应敏感指令进行捕获并处理。
+存在虚拟化漏洞的结构是<strong>不可虚拟化</strong>的，反之则<strong>可虚拟化</strong>。</p>
+<h2 id="处理器虚拟化">处理器虚拟化
+</h2><p>处理器虚拟化是<strong>最核心</strong>的部分。内存虚拟化和I/O虚拟化都基于处理器虚拟化。</p>
+<h3 id="虚拟处理器及其相关">虚拟处理器及其相关
+</h3><p>VMM需要虚拟出一个虚拟处理器为上层OS提供虚拟硬件抽象，
+此外还需要虚拟出一系列虚拟寄存器供上层OS使用，模拟出虚拟上下文负责虚拟处理器的调度。
+虚拟处理器是一个逻辑上的处理器，它需要包含客户机OS所需物理架构的一切，包括但不限于：</p>
+<ul>
+<li>指令集合和执行结果。</li>
+<li>可用寄存器集合。包括通用寄存器和一系列系统寄存器。</li>
+<li>运行模式。如x86所包含的四种模式（实模式、保护模式等）。</li>
+<li>地址翻译系统（如多级页表）。</li>
+<li>保护机制（如段/页保护）。</li>
+<li>中断/异常机制。</li>
+</ul>
+<p>从VMM的角度讲，虚拟处理器是其需要模拟执行的一组功能集合，其负责处理由客户机OS传递下来的一系列指令。
+虚拟处理器在执行任务的时候需要保存对应的上下文。
+相比物理处理器的上下文，虚拟处理器的上下文还需要存储一系列系统寄存器，
+这是因为当客户机OS想要通过敏感指令对处理器相关的寄存器进行访问和修改时，VMM会将其重定位到虚拟处理器。</p>
+<p>需要注意的是，VMM可以为虚拟机呈现出与实际物理机<em>完全不一致</em>的功能和行为，
+如虚拟处理器个数可以与物理处理器个数完全不同。</p>
+<p>在处理器虚拟化中，模拟出虚拟处理器等的目的是为了让敏感指令能够被VMM陷入并模拟，而不是直接作用于真实硬件上。
+一般而言，VMM的陷入部分是利用了处理器的中断异常机制实现的。具体有以下几种方式：</p>
+<ul>
+<li><strong>基于处理器保护机制的异常触发</strong>。如客户机OS在当前特权级执行了更高特权级的敏感指令。</li>
+<li>虚拟机<strong>主动触发的异常（陷阱）</strong>。</li>
+<li><strong>异步中断</strong>（处理器内部/外部设备中断源）。发生异步中断后会跳到由VMM准备好的处理程序。</li>
+</ul>
+<h3 id="中断和异常的注入">中断和异常的注入
+</h3><p>VMM需要按照物理处理器处理中断和异常的方式，正确模拟出对应的中断和异常处理过程。</p>
+<p>VMM会在<strong>硬件异常处理程序</strong>和<strong>指令模拟代码</strong>进行异常虚拟化的检查，而
+每次检查都需要区分异常发生的原因。在错误的时机进行异常注入会使得虚拟机执行异常。
+具体而言有两类原因：</p>
+<ol>
+<li>虚拟机自身环境和上下文设置<strong>违背了指令正确执行的条件</strong>。该类检查主要在虚拟机内部执行。</li>
+<li>虚拟机运行在<strong>非最高特权级别</strong>。一般是由<em>陷入再模拟</em>导致的。</li>
+</ol>
+<p>对于虚拟设备的中断和异常，
+由负责模拟虚拟设备的<strong>设备模拟器</strong>负责监视虚拟设备状态，并在满足中断条件的时候通知给虚拟中断控制器
+VMM负责监控虚拟中断控制器状态，并在其满足条件的时候模拟中断注入。</p>
+<p>若当前中断被禁止注入，VMM会将中断暂时<em>缓存</em>起来，直到客户机重新允许注入该中断为止。
+如果中断无法被及时注入，VMM还需要进行如下情况的处理：</p>
+<ul>
+<li>若此类中断<strong>允许丢失中断</strong>，则VMM会将后续的多个<em>同类型</em>中断合并为一个，
+否则VMM将会监控后续到来的每一个中断并逐一缓存，在条件允许时再逐一模拟。</li>
+<li>若该中断在<strong>阻塞期间被中断源取消</strong>，则VMM会额外注入一个被取消的假中断。</li>
+<li>（少见）如果一次阻塞的中断实例很多，VMM需要考虑客户机OS能否处理短时间内大量同类型中断注入。</li>
+</ul>
+<h3 id="对称多处理器smp技术的模拟">对称多处理器（SMP）技术的模拟
+</h3><p>VMM在物理计算资源足够的情况下可以为虚拟机模拟出多个虚拟处理器，
+这种技术被称为<strong>客户SMP技术</strong>，其可以有效提升虚拟机的性能
+（不会提升整体的性能）。</p>
+<p>尽管SMP为单个虚拟机带来了性能提升，但也带来了多处理器竞争共享资源等一系列复杂性。
+此外，VMM也面临着物理处理器（主机SMP）和虚拟处理器（客户SMP）之间的同步问题。
+有如下情况。</p>
+<ul>
+<li><strong>VMM自身代码之间的同步问题</strong>：VMM负责协调物理处理器步调来满足主机SMP要求。</li>
+<li><strong>同一虚拟机内部的多个虚拟处理器间的同步问题</strong>：交由客户机OS处理。</li>
+<li><strong>VMM造成的虚拟处理器之间的同步问题</strong>：由VMM负责处理。</li>
+</ul>
+<p>下图展示了客户SMP的模拟流程。从物理机的模拟流程出发，在虚拟化的环境中，由
+VMM代替原先的BIOS来选取<strong>BSP（主启动处理器）</strong> 和<strong>AP（应用处理器）</strong>，
+而后将二者初始化到某一状态。
+和主机SMP的启动流程不一样的是，如果客户机OS可以被修改，
+则VMM可以完全使用其自定义的协议进行处理器的初始化和AP的唤醒；
+如果客户机OS不可被修改，VMM仅需按照和物理机相同的方式进行启动即可。</p>
+<pre class="mermaid" style="visibility:hidden">flowchart TD
+    subgraph NATIVE["物理机原生 SMP 启动流程（背景）"]
+        direction TB
+        A1[BIOS 选取 BSP 与 AP] --> A2[BIOS 将所有处理器初始化到某种状态]
+        A2 --> A3[BSP 经 Boot Loader 跳转至 OS 初始化代码]
+        A2 --> A4[所有 AP 进入等待硬件初始化信号的状态]
+        A3 --> A5[OS 初始化到某一时刻]
+        A5 --> A6["OS 向所有 AP 发出初始化硬件信号<br/>（INIT-SIPI-SIPI）并提供启动代码"]
+        A6 --> A7[AP 收到信号后跳转到 OS 指定的启动代码]
+        A4 --> A7
+        A7 --> A8[OS 按自己的方式初始化所有处理器]
+        A8 --> A9[每个处理器独立运行调度程序]
+    end
+
+    subgraph VIRT["虚拟化环境中的客户 SMP 模拟流程"]
+        direction TB
+        B0[前提：VMM 已启动运行<br/>客户机 OS 正处于初始化阶段] --> B1[VMM 选择第一个虚拟处理器作为 BSP<br/>其余虚拟处理器作为 AP]
+        B1 --> B2[VMM 将所有虚拟处理器初始化到某种状态]
+
+        B2 --> C{客户机 OS<br/>是否可修改？}
+
+        C -- 不可修改 --> D1["VMM 按软件手册对处理器<br/>加电重设状态的描述设置虚拟处理器<br/>（虚拟控制寄存器、虚拟运行模式等）"]
+        C -- 可修改 --> D2["VMM 使用自定义协议<br/>（如直接跳过实模式，<br/>将虚拟处理器初始化为保护模式）"]
+
+        D1 --> E[启动代码初始化到某一时刻<br/>AP 需收到信号被唤醒]
+        D2 --> E
+
+        E --> F{客户机 OS<br/>是否可修改？}
+
+        F -- 不可修改 --> G1["VMM 截获客户机 OS 发出的<br/>INIT-SIPI-SIPI 序列<br/>负责唤醒其他虚拟 AP"]
+        F -- 可修改 --> G2["VMM 使用自定义的<br/>简单唤醒机制唤醒虚拟 AP"]
+
+        G1 --> H[虚拟 AP 跳转至启动代码<br/>继续执行]
+        G2 --> H
+        H --> I[客户机 OS 完成所有虚拟处理器的初始化]
+        I --> J[各虚拟处理器独立运行调度程序]
+    end
+
+    NATIVE -.对应/模拟.-> VIRT</pre><h2 id="内存虚拟化">内存虚拟化
+</h2><p>VMM在进行内存的虚拟化的时候，需要保证虚拟化的内存满足以下两点：</p>
+<ol>
+<li><strong>内存起始地址是0</strong>。</li>
+<li><strong>内存一定是连续的</strong>。</li>
+</ol>
+<p>VMM需要某种“欺骗”手段，让各虚拟机认为其所持有的内存满足上述两点要求。</p>
+<p>由于满足上述两点的真实物理内存只有一份，因而需要引入一个新的地址空间，
+称为<strong>客户机物理地址（Guest Physical Address，GPA）空间</strong>。</p>
+<p>如下图<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>所示，VMM负责分配和管理各虚拟机的物理内存，实际上这些物理内存是
+虚构的客户机物理地址空间，客户机OS的指令地址也是客户机物理地址。
+客户机OS的每次访存使用的客户机物理地址，是<strong>不能</strong>被直接发送到总线的，
+需要由VMM将其转化为宿主机的物理地址才能进行访存。</p>
+<p><img alt="内存虚拟化示意图" class="gallery-image" data-flex-basis="377px" data-flex-grow="157" height="558" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/image.png" srcset="/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/image_hu_b2bdafc570dcb32e.png 800w, /p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/image.png 877w" width="877"></p>
+<p>引入了客户机物理地址空间后，VMM需要考虑两个问题：</p>
+<ol>
+<li>给定虚拟机，需要给出<strong>客户机物理地址到宿主机物理地址（Host Physical Address，HPA）之间的映射关系</strong>。</li>
+<li><strong>截获客户机对物理内存的访问，并根据映射关系，将其访问地址转换为宿主机物理地址</strong>。</li>
+</ol>
+<p>上述的第一个问题，仅需要一个哈希表便可以解决。
+实际上，客户机OS的访存要经历两层转换，即
+<strong>客户机虚拟地址（Guest Virtual Address，GVA）</strong> &ndash;&gt; GPA 和 GPA &ndash;&gt; HPA。</p>
+<p>第二个问题的实现较为复杂和具有挑战性，也是衡量虚拟机性能最重要的方面。</p>
+<p>为了更有效地利用空闲内存，VMM会以小粒度进行内存分配，
+这可能会造成虚拟机的物理内存实际上可能是不连续的。</p>
+<p>内存虚拟化也实现了整个系统的安全隔离（虚拟机和虚拟机、虚拟机和VMM）。具体而言：</p>
+<ul>
+<li>VMM将虚拟机置于一个和自身<strong>完全不同的地址空间</strong>中运行，或通过<strong>段限制</strong>控制客户机OS的访问空间，
+从而避免虚拟机触碰到VMM的状态信息。</li>
+<li>VMM使用特殊的<strong>权限验证</strong>机制来局限住虚拟机的访问空间，保证虚拟机只能访问VMM给定的物理页，
+使得不同的虚拟机之间的内存空间相互隔离。</li>
+<li>VMM使用某些硬件技术防止虚拟机利用DMA绕过处理器直接访问目标内存，从而保证了物理内存的权限安全性。</li>
+</ul>
+<h2 id="io虚拟化">I/O虚拟化
+</h2><p>由于外设资源有限，VMM需要通过I/O虚拟化来对外设资源进行复用，以满足多个虚拟机的I/O需求。</p>
+<p>在OS中，驱动程序并不关心设备的具体硬件实现，只要其接口符合定义即可使用。
+而I/O虚拟化所需要做的事情也是按照接口规范和定义，使用软件模拟出对应的设备，
+VMM负责截获客户机OS的设备访问请求，并进行I/O虚拟化。</p>
+<p>I/O虚拟化不需要完整模拟出外设的所有接口，其具体模拟策略取决于客户机OS及VMM。</p>
+<p>下文介绍I/O虚拟化所需要的步骤和工作。</p>
+<h3 id="设备发现">设备发现
+</h3><p>VMM需要提供一种方式使得客户机OS能够发现虚拟设备。设备发现取决于被虚拟的设备类型。</p>
+<ol>
+<li>模拟<strong>所处物理总线</strong>的设备。具体包含两种：
+<ol>
+<li>所处总线<strong>不可枚举</strong>，且设备本身<strong>所属资源由硬编码固定</strong>下来（e.g. ISA设备、鼠标、PS/2键盘、传统IDE控制器等）。
+对于这类设备，驱动器会使用设备特定的方式进行设备识别。
+VMM仅需在给定端口进行正确的模拟（设备自身逻辑），驱动程序就可以发现。</li>
+<li>所处总线<strong>可枚举</strong>，且相关设备资源<strong>软件可配置</strong>（e.g. PCI设备）。
+对于这类设备，VMM不仅需要模拟设备自身逻辑，还要进一步模拟设备对应的行为。</li>
+</ol>
+</li>
+<li>模拟<strong>完全虚拟</strong>的设备（e.g. FE/BE模型）。这类设备没有现实中的规范，其总线类型完全取决于VMM的具体实现。
+VMM可以使用原有的总线，也可以自定义一套新的总线。
+使用原有的总线可以有很好的兼容性，而自定义总线可能可以简化相关复杂模拟，但这意味着需要对自定义总线进行额外维护，
+此外自定义总线还可能需要设计一个对应的驱动程序。</li>
+</ol>
+<h3 id="访问截获">访问截获
+</h3><p>客户机OS发现设备后，会对设备发出访问请求，
+此时VMM需要对访问请求进行截获并进行模拟。
+截获的原理依然是<strong>陷入再模拟</strong>。分为四类情况讨论：</p>
+<ol>
+<li>Port I/O（端口I/O，独立编址）：处理器是否能够通过端口I/O访问设备取决于其<strong>特权级别和I/O位图</strong>。
+若设备非直接分配给客户机OS，VMM可以将<strong>I/O位图对应位进行关闭</strong>，此时若客户机OS试图访问该端口就会抛出异常，
+从而被VMM捕获进行模拟；若设备是直接分配给客户机OS的则不做截获，保持I/O位图对应位，直接发送给系统总线。</li>
+<li>MMIO：持有MMIO资源的设备，其MMIO是物理地址空间的一部分，这类资源的访问由<strong>页表</strong>控制。
+若设备非直接分配给客户机OS，VMM仅需将映射到MMIO的<strong>页表项设为无效</strong>，客户机OS访问该页时就会抛出
+缺页异常，进而被VMM捕获，并发现其中的MMIO资源，从而进行模拟。
+若设备是直接分配给客户机OS的也不做上述截获操作，按正常流程访问即可。</li>
+<li>中断：若设备非直接分配给客户机OS，则由VMM负责物理设备中断的拦截和注入；
+否则，由VMM传递该设备的中断源到客户机的虚拟中断逻辑。</li>
+<li>DMA：VMM只需要提供对应的地址转换关系，使得设备模拟器能够正确映射地址即可。</li>
+</ol>
+<h3 id="设备模拟">设备模拟
+</h3><p>设备模拟的方式主要可以分为以下几类：</p>
+<ul>
+<li><strong>完全模拟</strong>。即按照物理接口规范使用<strong>软件完全模拟</strong>出一个设备，
+此时客户机OS可以复用原有的驱动程序。
+由于该方式需要涉及许多寄存器操作，VMM需要不停地截获请求并模拟，
+导致上下文开销很大。</li>
+<li><strong>FE/BE模拟</strong>。这种架构基于请求/事物机制，将驱动程序分为位于<strong>客户机OS</strong>上的<strong>前端（Front End，FE）驱动</strong>
+和位于<strong>VMM中</strong>的<strong>后端（Back End，BE）驱动</strong>。客户机OS上的前端驱动截获请求，通过特殊通信机制发送给
+后端驱动，后端驱动处理完毕后再返回结果给前端驱动。基于这种方式的上下文开销较小。</li>
+<li><strong>直接分配设备</strong>。此种方式VMM不需要模拟，客户机OS直接使用原有驱动访问目标设备。</li>
+</ul>
+<p>下表<sup id="fnref2:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>展示了上述不同的设备虚拟化方式的特点。</p>
+<p><img alt="不同的虚拟化方式" class="gallery-image" data-flex-basis="534px" data-flex-grow="222" height="546" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/image-1.png" srcset="/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/image-1_hu_9f2ea462ecc9d934.png 800w, /p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/image-1.png 1216w" width="1216"></p>
+<h3 id="设备复用">设备复用
+</h3><p>VMM可以选择性地进行设备的虚拟化。</p>
+<ul>
+<li>一部分设备可以完全虚拟化从而不用接触物理设备，如CMOS。</li>
+<li>一部分设备则需要通过设备模拟器来访问真实物理设备。</li>
+</ul>
+<p>对于上述情况的后者，由于设备模拟器通常运行在<strong>I/O特权环境</strong>中，
+该环境存在物理驱动，因而其相当于众物理驱动的一个<strong>客户</strong>（用户进程）。
+而大多数物理驱动都支持同时接受来自多个进程（客户）的请求，
+从而使得设备复用能够实现。</p>
+<h2 id="vmm的功能和组成">VMM的功能和组成
+</h2><p>VMM需要对虚拟资源和物理资源进行管理。具体而言如下。</p>
+<h3 id="虚拟资源的管理">虚拟资源的管理
+</h3><p>VMM需要对其所持有的虚拟资源进行分配和管理。其需要包含的基本模块有</p>
+<ul>
+<li>处理器虚拟化模块</li>
+<li>内存虚拟化模块</li>
+<li>I/O虚拟化模块</li>
+</ul>
+<p>此外，VMM需要有对虚拟机资源进行调度的能力，以及能够让虚拟机间进行通信的能力。
+VMM对用户也需要暴露出管理接口，以方便管理虚拟机生命周期以及调整虚拟机相关配置。</p>
+<h3 id="物理资源的管理">物理资源的管理
+</h3><p>VMM也承担全部或部分物理资源管理的职能，因实现而不同。
+具体而言一般包括处理器管理、内存管理、I/O管理、设备管理和系统时间维护等。</p>
+<h3 id="其他模块">其他模块
+</h3><p>除以上提及部分，VMM还可以提供的模块有</p>
+<ul>
+<li>软件定时器</li>
+<li>多处理器同步机制</li>
+<li>调试工具</li>
+<li>性能采集和分析</li>
+<li>安全模块</li>
+<li>电源管理</li>
+</ul>
+<h2 id="vmm的分类">VMM的分类
+</h2><p>VMM一般有如下两种分类方法。</p>
+<h3 id="按虚拟平台分类">按虚拟平台分类
+</h3><p>在这种情况下，VMM主要分为以下两种类型。</p>
+<ol>
+<li>
+<p><strong>完全虚拟化（Full Virtualization）</strong>，
+指采用某种方式模拟出一套<strong>完整的物理平台（处理器、内存、I/O等）</strong>，客户机OS<strong>无需修改</strong>就可以<strong>直接运行</strong>在VMM上，
+这类VMM的运作方式和底层硬件完全一样。根据发展历史，该类虚拟化技术还可以分为以下两种：</p>
+<ol>
+<li>
+<p><strong>软件辅助的完全虚拟化</strong>。早期硬件（如x86）<strong>不存在</strong>对虚拟化的支持，因而只能全部使用软件模拟。
+一个典型做法是使用<strong>优先级压缩（Ring Compression）</strong> 和<strong>二进制代码翻译（Binary Translation，BT）</strong> 相结合。
+其中：</p>
+<ul>
+<li>优先级压缩：让VMM运行在Ring 0（最高级），客户机OS运行在Ring 1（次一级），因而
+所有的特权指令都能被截获，但有部分敏感指令不会因为权限问题而被截获。</li>
+<li>BT技术：将对虚拟化不敏感的指令翻译为虚拟化敏感的指令（块）。</li>
+</ul>
+<p>尽管如此，这类打补丁的方式所实现的VMM很难在架构上保持完整性，即总会有补丁难以覆盖的地方。
+并且补丁之间可能会相互冲突。此外，由于补丁修改了指令行为，导致所呈现出的架构不完整。</p>
+</li>
+<li>
+<p><strong>硬件辅助的完全虚拟化</strong>。通过在硬件添加支持虚拟化的机制，从而VMM可以通过硬件截获敏感指令来进行模拟。
+这是一种<strong>完备的</strong>虚拟化方法，VMM可以模拟一个和真实主机<strong>完全一样</strong>的环境。
+该部分的代表性技术为<strong>Intel的VT-x</strong>。</p>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>类虚拟化（Para-Virtualization）</strong>。这类虚拟化技术是通过<strong>修改操作系统内核源代码</strong>，
+使得难以虚拟化的指令能够得以规避，从而让整个架构得以被虚拟化。
+由于对源代码进行了修改，这种方式还可以进行I/O的优化，使用更加高效的协议代替原本的协议。</p>
+</li>
+</ol>
+<h3 id="按实现结构分类">按实现结构分类
+</h3><p>具体而言可以被分为如下三类：</p>
+<ol>
+<li>
+<p><strong>Hypervisor模型</strong>。在该模型中，VMM可以看作一个完备的操作系统，其<strong>同时管理</strong>上层的虚拟资源和下层的物理资源。<br>
+由于其直接管理物理资源，在资源分配方面效率很高。
+但是其需要对设备驱动重新实现以支持I/O，开发量巨大。
+此外其也需要对一系列资源管理相关功能进行重新实现，工作量大。
+<br>
+下图<sup id="fnref3:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>展示了Hypervisor模型。（其中，设备模型用于I/O虚拟化）
+<br>
+<img alt="Hypervisor模型" class="gallery-image" data-flex-basis="446px" data-flex-grow="185" height="371" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/image-2.png" width="690"></p>
+</li>
+<li>
+<p><strong>宿主模型</strong>。这个模型下，VMM是<strong>内嵌于宿主机操作系统的一个子模块</strong>，
+这意味着VMM可以充分利用宿主机OS的资源，包括设备驱动、调度机制等，
+但是VMM的运行效率也会相对低下，且VMM的安全性完全受宿主机OS的影响。
+<br>
+下图<sup id="fnref4:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>展示了宿主模型。
+<br>
+<img alt="宿主模型" class="gallery-image" data-flex-basis="481px" data-flex-grow="200" height="406" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/image-3.png" srcset="/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/image-3_hu_ac702bf4abd525f9.png 800w, /p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/image-3.png 815w" width="815"></p>
+</li>
+<li>
+<p><strong>混合模型</strong>。这是上述两种模型的汇合体，VMM掌控所有的物理资源，但是
+其<strong>大部分I/O设备控制权</strong>都让渡给了运行在<strong>特权虚拟机</strong>中的<strong>特权操作系统</strong>。
+VMM虚拟化方面的工作也被拆分：处理器和内存虚拟化由VMM全权进行，而I/O虚拟化由VMM和特权操作系统共同合作完成。<br>
+混合模型具有上述两种模型的优点，但是也存在缺点。
+由于特权操作系统运行在用户态，这意味着VMM和特权操作系统的交互存在上下文切换开销，当切换较频繁的时候会影响性能。
+此外，一部分功能必须在VMM中实现（e.g. 电源管理），无法借助特权操作系统。
+<br>
+下图<sup id="fnref5:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>展示了混合模型。
+<br>
+<img alt="混合模型" class="gallery-image" data-flex-basis="414px" data-flex-grow="172" height="421" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%89%E7%AB%A0/image-4.png" width="727"></p>
+</li>
+</ol>
+<h2 id="典型虚拟化产品">典型虚拟化产品
+</h2><p>截至书<sup id="fnref6:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>的出版时间，所提及的VMM产品主要有</p>
+<p>非开源的：</p>
+<ul>
+<li>VMware系列：如VMware ESX Server（Hypervisor）、VMware Workstation（宿主）等。</li>
+<li>Microsoft虚拟化产品：Virtual Server（宿主）、Virtual PC（宿主）等。</li>
+</ul>
+<p>开源的：</p>
+<ul>
+<li>Xen<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>（混合）</li>
+<li>KVM<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>（项目发起人和维护人认为是Hypervisor）</li>
+<li>VirtualBox<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>（宿主）</li>
+</ul>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>《系统虚拟化：原理与实现》&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref2:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref3:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref4:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref5:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref6:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p>Xen Project - Open Source Virtualization:<a class="link" href="https://xenproject.org/"  target="_blank" rel="noopener"
+    >Link Source</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p>KVM: <a class="link" href="https://linux-kvm.org/page/Main_Page"  target="_blank" rel="noopener"
+    >Link Source</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p>VirtualBox: <a class="link" href="https://www.virtualbox.org/"  target="_blank" rel="noopener"
+    >Link Source</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+        
+            <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化</a>
+        
+            <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright inline-meta">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under <a class="link" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"  target="_blank" rel="noopener"
+    >CC BY-NC-SA 4.0</a></span>
+    </section>
+    <section class="article-lastmod inline-meta">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            最后更新于 2026年9月30日星期三
+        </span>
+    </section></footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">相关文章</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-%E7%AC%AC%E4%B8%80%E7%AB%A0/">
+        
+        <div class="article-image">
+            <img alt="Featured image of post 虚拟化读书笔记 第一章" height="150" loading="lazy" src="/795-800x600_5277759075622663374_hu_abc7b79842bc3fe5.jpg" srcset="/795-800x600_5277759075622663374_hu_abc7b79842bc3fe5.jpg 1x, /795-800x600_5277759075622663374_hu_f94dab10db6b921b.jpg 2x" width="250">
+
+        </div>
+        
+
+        <div class="article-details"style="background: linear-gradient(0deg, #b1b4ac80 0%, #2f3735C0 100%);">
+            <h2 class="article-title">虚拟化读书笔记 第一章</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="has-image">
+    <a href="/p/rcore-lab%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86/">
+        
+        <div class="article-image">
+            <img alt="Featured image of post rCore Lab学习 第二部分" height="150" loading="lazy" src="/818-800x600_1598696307713877649_hu_98c426f55411a977.jpg" srcset="/818-800x600_1598696307713877649_hu_98c426f55411a977.jpg 1x, /818-800x600_1598696307713877649_hu_b3325286a2e8b133.jpg 2x" width="250">
+
+        </div>
+        
+
+        <div class="article-details"style="background: linear-gradient(0deg, #a8b1ad80 0%, #678f9bC0 100%);">
+            <h2 class="article-title">rCore Lab学习 第二部分</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="has-image">
+    <a href="/p/rcore-lab%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86/">
+        
+        <div class="article-image">
+            <img alt="Featured image of post rCore Lab学习 第一部分" height="150" loading="lazy" src="/909-800x600_11019772669087666845_hu_42aa34ea314f4d8.jpg" srcset="/909-800x600_11019772669087666845_hu_42aa34ea314f4d8.jpg 1x, /909-800x600_11019772669087666845_hu_ebdfb6f90cbb9f33.jpg 2x" width="250">
+
+        </div>
+        
+
+        <div class="article-details"style="background: linear-gradient(0deg, #1e5fa580 0%, #bddbf7C0 100%);">
+            <h2 class="article-title">rCore Lab学习 第一部分</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <script
+    src="https://giscus.app/client.js"
+    data-repo="WedLG/wedlg.github.io"
+    data-repo-id="R_kgDOKgbUqg"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOKgbUqs4DCyVr"
+    data-mapping="pathname"
+    data-strict="false"
+    data-reactions-enabled="true"
+    data-emit-metadata="false"
+    data-input-position="bottom"
+    data-theme="light"
+    data-lang="zh-CN"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async
+></script>
+<script>
+    function setGiscusTheme(theme) {
+        let giscus = document.querySelector("iframe.giscus-frame");
+        if (giscus) {
+            giscus.contentWindow.postMessage(
+                {
+                    giscus: {
+                        setConfig: {
+                            theme: theme,
+                        },
+                    },
+                },
+                "https://giscus.app"
+            );
+        }
+    }
+
+    (function () {
+        addEventListener("message", (e) => {
+            if (event.origin !== "https://giscus.app") return;
+            handler();
+        });
+        window.addEventListener("onColorSchemeChange", handler);
+
+        function handler() {
+            if (document.documentElement.dataset.scheme === "light") {
+                setGiscusTheme('light');
+            } else {
+                setGiscusTheme('dark_dimmed');
+            }
+        }
+    })();
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2026 WedLG的博客
+    </section>
+    
+    <section class="powerby">
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.3">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    <div class="mermaid-modal" id="mermaid-modal">
+    <div class="mermaid-modal-header">
+        <div class="mermaid-modal-controls">
+            <button data-zoom="-1">− Zoom Out</button>
+            <button data-zoom="0">Reset (100%)</button>
+            <button data-zoom="1">+ Zoom In</button>
+            <button data-zoom="fit">Fit to Screen</button>
+        </div>
+        <button class="mermaid-modal-close" id="mermaid-modal-close">✕ Close (Esc)</button>
+    </div>
+    <div class="mermaid-modal-body" id="mermaid-modal-body">
+        <div class="mermaid-modal-content" id="mermaid-modal-content"></div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script><script type="module">
+import { initMermaidPage } from '\/ts\/mermaid.js';
+initMermaidPage({"darkTheme":"dark","darkThemeVariables":{},"htmlLabels":true,"lightTheme":"default","lightThemeVariables":{},"look":"classic","securityLevel":"strict","transparentBackground":false});
+</script>
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.0cd3a73539d798eff53b23ca5158229a5bca02525090bbefd81a8c9b176f7a8b.js" defer></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,174 @@
+/* ============================================================
+   浅色模式：图纸风细网格（白底 + 浅蓝灰线）
+   ============================================================ */
+[data-scheme="light"] body {
+    background-color: #f4f6fa;
+    background-image:
+        /* 主线：每 120px 一条，稍深 */
+        linear-gradient(rgba(90, 110, 150, 0.10) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(90, 110, 150, 0.10) 1px, transparent 1px),
+        /* 细线：每 24px 一条，极淡 */
+        linear-gradient(rgba(90, 110, 150, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(90, 110, 150, 0.05) 1px, transparent 1px);
+    background-size:
+        120px 120px,
+        120px 120px,
+        24px 24px,
+        24px 24px;
+    background-attachment: fixed;
+}
+
+/* ============================================================
+   暗色模式：深蓝黑底 + 微弱网格（呼应星空版的沉稳）
+   ============================================================ */
+[data-scheme="dark"] body {
+    background-color: #0d1117;
+    background-image:
+        /* 主线：带一点蓝紫色调 */
+        linear-gradient(rgba(120, 150, 220, 0.10) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(120, 150, 220, 0.10) 1px, transparent 1px),
+        /* 细线 */
+        linear-gradient(rgba(120, 150, 220, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(120, 150, 220, 0.05) 1px, transparent 1px);
+    background-size:
+        120px 120px,
+        120px 120px,
+        24px 24px,
+        24px 24px;
+    background-attachment: fixed;
+}
+
+/* ============================================================
+   边缘羽化：四周渐变遮罩，网格在中间清晰、边缘淡出
+   ============================================================ */
+[data-scheme="light"] body::before,
+[data-scheme="dark"] body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* 浅色：边缘淡回纯色 */
+[data-scheme="light"] body::before {
+    background: radial-gradient(ellipse 90% 80% at 50% 40%,
+        transparent 55%,
+        #f4f6fa 100%);
+}
+
+/* 暗色：边缘略压暗，聚焦中间内容 */
+[data-scheme="dark"] body::before {
+    background: radial-gradient(ellipse 90% 80% at 50% 40%,
+        transparent 50%,
+        rgba(5, 8, 14, 0.7) 100%);
+}
+
+/* ============================================================
+   卡片：延续上一版的玻璃质感（网格从边缘隐约透出）
+   ============================================================ */
+[data-scheme="dark"] {
+    --card-background: rgba(255, 255, 255, 0.05);
+    --card-background-hover: rgba(255, 255, 255, 0.10);
+}
+
+[data-scheme="dark"] .article-content,
+[data-scheme="dark"] .widget,
+[data-scheme="dark"] .sidebar header,
+[data-scheme="dark"] .pagination .page-link {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+    border-radius: 14px;
+}
+
+[data-scheme="light"] .article-content,
+[data-scheme="light"] .widget {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(90, 110, 150, 0.10);
+    box-shadow: 0 2px 12px rgba(30, 40, 60, 0.06);
+    border-radius: 14px;
+}
+
+/* ============================================================
+   分类卡片：彩色渐变 + 悬浮效果
+   ============================================================ */
+
+/* 基础：卡片相对定位，让伪元素垫底 */
+.taxonomy-card {
+    position: relative;
+    overflow: hidden;
+    border: none !important;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* 文字层抬到渐变之上 */
+.taxonomy-card .taxonomy-name,
+.taxonomy-card .taxonomy-count,
+.taxonomy-card a {
+    position: relative;
+    z-index: 1;
+}
+
+/* 6 组渐变色循环 */
+.taxonomy-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.85;
+}
+
+.taxonomy-card:nth-child(6n+1)::before { background: linear-gradient(135deg, #667eea, #764ba2); }
+.taxonomy-card:nth-child(6n+2)::before { background: linear-gradient(135deg, #f093fb, #f5576c); }
+.taxonomy-card:nth-child(6n+3)::before { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+.taxonomy-card:nth-child(6n+4)::before { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+.taxonomy-card:nth-child(6n+5)::before { background: linear-gradient(135deg, #fa709a, #fee140); }
+.taxonomy-card:nth-child(6n+6)::before { background: linear-gradient(135deg, #30cfd0, #330867); }
+
+/* 文字改白色，压得住彩色底 */
+.taxonomy-card .taxonomy-name {
+    color: #fff;
+    font-weight: 600;
+}
+.taxonomy-card .taxonomy-count {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* 悬浮：上浮 + 阴影加深 */
+.taxonomy-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+.taxonomy-card:hover::before {
+    opacity: 1;
+}
+
+/* ============================================================
+   浅色模式：降低饱和度，保持清爽
+   ============================================================ */
+[data-scheme="light"] .taxonomy-card::before {
+    opacity: 0.12;   /* 浅色下只做淡彩晕染 */
+}
+
+[data-scheme="light"] .taxonomy-card {
+    background: #fff;
+    border: 1px solid rgba(90, 110, 150, 0.12) !important;
+}
+
+[data-scheme="light"] .taxonomy-card .taxonomy-name {
+    color: var(--card-text-color-main);
+    font-weight: 600;
+}
+
+[data-scheme="light"] .taxonomy-card .taxonomy-count {
+    color: var(--card-text-color-secondary);
+}
+
+[data-scheme="light"] .taxonomy-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(30, 40, 60, 0.12);
+}

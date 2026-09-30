@@ -1,12 +1,13 @@
 mainSections   = ["post"]
 rssFullContent = true
 favicon        = "img/avatar.png"
+customCSS      = ["css/custom.css"]
 
 [footer]
     since = 2020
 
 [sidebar]
-    emoji    = "✏️"
+    emoji    = "🌋"
     subtitle = "只是个铅笔"
     avatar   = "img/avatar.png"
 

@@ -1,0 +1,81 @@
+/* ============ 基础夜空渐变 ============ */
+body {
+    background: linear-gradient(to bottom, #020024 0%, #090979 35%, #1a1a40 70%, #24243e 100%);
+    background-attachment: fixed;
+}
+
+/* ============ 星星层 ============ */
+/* 原理：用 radial-gradient 画一颗星，再用 box-shadow 复制出满天星 */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: transparent;
+    pointer-events: none;          /* 不挡鼠标 */
+    z-index: 0;                    /* 压在内容下面 */
+}
+
+/* 大星星层（近，亮，闪烁快） */
+body::before {
+    box-shadow:
+        120px 80px #fff, 340px 200px rgba(255,255,255,.9),
+        560px 50px #fff,  780px 300px rgba(200,220,255,.8),
+        950px 120px #fff, 1130px 420px rgba(255,255,255,.7),
+        60px 480px rgba(255,255,255,.8),  420px 560px #fff,
+        700px 650px rgba(255,255,255,.9), 900px 750px #fff,
+        200px 820px rgba(180,200,255,.8), 1150px 60px #fff,
+        500px 900px #fff,  80px 300px rgba(255,255,255,.6),
+        1000px 950px #fff, 300px 1050px rgba(255,255,255,.8),
+        850px 200px #fff,  650px 380px rgba(170,190,255,.7);
+    animation: twinkle 3s ease-in-out infinite alternate;
+}
+
+/* 小星星层（远，暗，闪烁慢）——星点更多 */
+body::after {
+    width: 1px;
+    height: 1px;
+    box-shadow:
+        50px 30px rgba(255,255,255,.5),  180px 140px rgba(255,255,255,.4),
+        300px 70px rgba(255,255,255,.6),  460px 190px rgba(255,255,255,.35),
+        620px 40px rgba(255,255,255,.5),  750px 240px rgba(255,255,255,.45),
+        880px 100px rgba(255,255,255,.55), 1040px 330px rgba(255,255,255,.4),
+        1180px 180px rgba(255,255,255,.5), 140px 350px rgba(255,255,255,.4),
+        380px 420px rgba(255,255,255,.55), 540px 500px rgba(255,255,255,.35),
+        720px 580px rgba(255,255,255,.5),  860px 680px rgba(255,255,255,.45),
+        990px 480px rgba(255,255,255,.4),  1120px 720px rgba(255,255,255,.5),
+        240px 620px rgba(255,255,255,.45), 400px 760px rgba(255,255,255,.4),
+        640px 860px rgba(255,255,255,.5),  820px 920px rgba(255,255,255,.35),
+        60px 900px rgba(255,255,255,.45),  500px 1020px rgba(255,255,255,.5),
+        940px 1080px rgba(255,255,255,.4), 200px 1100px rgba(255,255,255,.45);
+    animation: twinkle 4.5s ease-in-out infinite alternate-reverse;
+}
+
+/* 闪烁动画 */
+@keyframes twinkle {
+    from { opacity: 0.4; }
+    to   { opacity: 1; }
+}
+
+/* ============ 内容可读性 ============ */
+/* Stack 的容器盖在星空上，保持半透明深色卡片 */
+:root {
+    --card-background: rgba(20, 20, 45, 0.75);
+    --card-background-hover: rgba(30, 30, 60, 0.85);
+}
+.article-content, .widget, .sidebar header {
+    backdrop-filter: blur(6px);
+}
+
+/* ============ 浅色模式：白天不显示星空 ============ */
+[data-scheme="light"] body {
+    background: linear-gradient(to bottom, #a8c0ff 0%, #cfd9df 100%);
+}
+[data-scheme="light"] body::before,
+[data-scheme="light"] body::after {
+    display: none;   /* 白天星星消失 */
+}

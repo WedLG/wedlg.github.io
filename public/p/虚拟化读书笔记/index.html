@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN" dir="ltr">
     <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="前言 今天开始补充虚拟化相关的知识， 所读的书籍名为《系统虚拟化：原理与实现》。\n虚拟化的基本概念 虚拟化本质是一种对计算机资源的抽象。 其通过抽象位于下层的计算机运行环境，为运行其上的软件提供一系列虚拟的接口和资源。\n">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="前言 今天开始补充虚拟化相关的知识， 所读的书籍名为《系统虚拟化：原理与实现》。 此为第一章的读书笔记\n虚拟化的基本概念 虚拟化本质是一种对计算机资源的抽象。 其通过抽象位于下层的计算机运行环境，为运行其上的软件提供一系列虚拟的接口和资源。\n">
 <title>虚拟化读书笔记</title>
 
 
@@ -13,12 +13,12 @@
 
 
 <link rel="stylesheet" href="/scss/style.min.e62e09c60ba428a627e03568fa3df938f6a8224f815b5846f00816c17d4a0be4.css"><meta property='og:title' content="虚拟化读书笔记">
-<meta property='og:description' content="前言 今天开始补充虚拟化相关的知识， 所读的书籍名为《系统虚拟化：原理与实现》。\n虚拟化的基本概念 虚拟化本质是一种对计算机资源的抽象。 其通过抽象位于下层的计算机运行环境，为运行其上的软件提供一系列虚拟的接口和资源。\n">
+<meta property='og:description' content="前言 今天开始补充虚拟化相关的知识， 所读的书籍名为《系统虚拟化：原理与实现》。 此为第一章的读书笔记\n虚拟化的基本概念 虚拟化本质是一种对计算机资源的抽象。 其通过抽象位于下层的计算机运行环境，为运行其上的软件提供一系列虚拟的接口和资源。\n">
 <meta property='og:url' content='http://localhost:1313/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/'>
 <meta property='og:site_name' content='WedLG的博客'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='操作系统' /><meta property='article:tag' content='虚拟化' /><meta property='article:published_time' content='2026-09-22T10:47:12&#43;08:00'/><meta property='article:modified_time' content='2026-09-22T12:27:27&#43;08:00'/><meta property='og:image' content='https://picsum.photos/800/600?random=1790045232' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='操作系统' /><meta property='article:tag' content='虚拟化' /><meta property='article:tag' content='读书笔记' /><meta property='article:published_time' content='2026-09-22T10:47:12&#43;08:00'/><meta property='article:modified_time' content='2026-09-28T12:37:18&#43;08:00'/><meta property='og:image' content='https://picsum.photos/800/600?random=1790045232' />
 <meta name="twitter:title" content="虚拟化读书笔记">
-<meta name="twitter:description" content="前言 今天开始补充虚拟化相关的知识， 所读的书籍名为《系统虚拟化：原理与实现》。\n虚拟化的基本概念 虚拟化本质是一种对计算机资源的抽象。 其通过抽象位于下层的计算机运行环境，为运行其上的软件提供一系列虚拟的接口和资源。\n"><meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:description" content="前言 今天开始补充虚拟化相关的知识， 所读的书籍名为《系统虚拟化：原理与实现》。 此为第一章的读书笔记\n虚拟化的基本概念 虚拟化本质是一种对计算机资源的抽象。 其通过抽象位于下层的计算机运行环境，为运行其上的软件提供一系列虚拟的接口和资源。\n"><meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content='https://picsum.photos/800/600?random=1790045232' />
     <link rel="shortcut icon" href="/img/avatar.png" />
 
@@ -432,7 +432,8 @@
     
     <h2 id="前言">前言
 </h2><p>今天开始补充虚拟化相关的知识，
-所读的书籍名为《系统虚拟化：原理与实现》。</p>
+所读的书籍名为《系统虚拟化：原理与实现》。
+此为第一章的读书笔记</p>
 <h2 id="虚拟化的基本概念">虚拟化的基本概念
 </h2><p>虚拟化本质是一种对<strong>计算机资源的抽象</strong>。
 其通过抽象位于下层的计算机运行环境，为运行其上的软件提供一系列虚拟的接口和资源。</p>
@@ -461,17 +462,17 @@
 <li>编程语言层上的虚拟化。即一部分语言运行时所使用的虚拟机（如JVM）。</li>
 </ol>
 <h2 id="系统虚拟化">系统虚拟化
-</h2><p>系统虚拟化即将一台物理计算机系统虚拟化为一至多台具有独立资源（如CPU、内存等）和执行环境的虚拟计算机系统。
+</h2><p>系统虚拟化即将一台物理计算机系统虚拟化为一至多台具有独立资源（如CPU、内存、I/O、外设等）和执行环境的虚拟计算机系统。
 模拟出这些计算机系统的虚拟化层被称为<strong>虚拟机监控器（Virtual Machine Monitor，VMM）</strong>。</p>
 <p><img alt="系统虚拟化" class="gallery-image" data-flex-basis="322px" data-flex-grow="134" height="513" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/image.png" width="690"></p>
 <p>一般而言，虚拟计算机和物理计算机的ISA完全不同，
 但这样设计会使虚拟机上的每一条指令都需要在物理机上模拟执行，从而造成性能的极大下降。
 当然，相同ISA的虚拟机其运行效率会比较高。</p>
-<p>Popek和Goldberg认为虚拟机可以看作是物理机的一种高效隔离复制。虚拟机一般含有如下三个典型特征。</p>
+<p>Popek和Goldberg认为虚拟机可以看作是<strong>物理机的一种高效隔离复制</strong>。虚拟机一般含有如下三个典型特征。</p>
 <ul>
-<li>同质。虚拟机和物理机的运行环境本质上需要相同，但也可以有所差异。</li>
-<li>高效。虚拟机上的软件运行需要和物理机上的运行在性能上接近。</li>
-<li>资源受控。VMM需要对系统资源有完全控制能力和管理权限。</li>
+<li><strong>同质</strong>。虚拟机和物理机的运行环境本质上需要相同，但也可以有所差异。</li>
+<li><strong>高效</strong>。虚拟机上的软件运行需要和物理机上的运行在性能上接近。</li>
+<li><strong>资源受控</strong>。VMM需要对系统资源有完全控制能力和管理权限。</li>
 </ul>
 <div class="footnotes" role="doc-endnotes">
 <hr>
@@ -492,6 +493,8 @@
             <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
         
             <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">虚拟化</a>
+        
+            <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a>
         
     </section>
 
@@ -519,7 +522,7 @@
 
 
         <span>
-            最后更新于 2026年9月22日星期二
+            最后更新于 2026年9月28日星期一
         </span>
     </section></footer>
 
@@ -567,6 +570,22 @@
     <h2 class="section-title">相关文章</h2>
     <div class="subsection-list">
         <div class="article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/%E8%99%9A%E6%8B%9F%E5%8C%96%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0-2/">
+        
+        <div class="article-image">
+            <img alt="Featured image of post 虚拟化读书笔记 2" height="150" loading="lazy" src="/76-800x600_3113727245369081319_hu_6f503fa9a123ece.jpg" srcset="/76-800x600_3113727245369081319_hu_6f503fa9a123ece.jpg 1x, /76-800x600_3113727245369081319_hu_3f6b60c650e28d70.jpg 2x" width="250">
+
+        </div>
+        
+
+        <div class="article-details"style="background: linear-gradient(0deg, #a5a2a280 0%, #443f31C0 100%);">
+            <h2 class="article-title">虚拟化读书笔记 2</h2>
+        </div>
+    </a>
+</article>
             
                 
 <article class="has-image">
